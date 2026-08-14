@@ -1,0 +1,177 @@
+\documentclass[a4paper,landscape]{article}
+\usepackage[margin=1.0cm]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, shapes, shapes.multipart, fit, backgrounds}
+\usepackage{xcolor}
+
+\definecolor{hdrblue}{RGB}{25,70,145}
+\definecolor{hdrbg}{RGB}{205,220,250}
+\definecolor{clsbg}{RGB}{238,245,255}
+\definecolor{abstrhdr}{RGB}{140,85,0}
+\definecolor{abstrbg}{RGB}{255,243,215}
+\definecolor{lgray}{RGB}{90,110,150}
+
+\tikzset{
+  CB/.style={draw=hdrblue,thick,rectangle split,rectangle split parts=3,
+    rectangle split part fill={hdrbg,clsbg,clsbg},
+    text width=2.4cm,align=left,inner sep=2.5pt,rounded corners=1pt,font=\tiny\sffamily},
+  AB/.style={draw=abstrhdr,thick,rectangle split,rectangle split parts=3,
+    rectangle split part fill={abstrbg,white,white},
+    text width=2.4cm,align=left,inner sep=2.5pt,rounded corners=1pt,font=\tiny\sffamily},
+  assoc/.style={->,>=Latex,thick,lgray},
+  compose/.style={-{Diamond[open]},thick,hdrblue},
+  inherit/.style={-{Triangle[open]},thick,abstrhdr},
+  dep/.style={->,>=Latex,dashed,thick,gray},
+}
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{center}
+  {\Large\bfseries\sffamily\color{hdrblue} Class Diagram --- Metamorphic Circuit Breaker Framework}\\[3pt]
+  {\small\sffamily\color{gray} Metamorphic Circuit Breaker: A Runtime Reliability Layer for Detecting Transform-Brittleness in Deployed Vision Models}
+\end{center}
+\vspace{6pt}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0, font=\tiny\sffamily]
+
+% Layer 1 (y=0)
+\node[CB](img) at (0,0){
+  \textbf{\color{hdrblue}InputImage}\nodepart{two}
+  \texttt{- imageId : String}\\
+  \texttt{- rawData : Tensor}\\
+  \texttt{- source : String}\nodepart{three}
+  \texttt{+ load() : Tensor}\\
+  \texttt{+ resize(w,h) : Tensor}};
+
+\node[CB](te) at (4,0){
+  \textbf{\color{hdrblue}TransformationEngine}\nodepart{two}
+  \texttt{- transforms : List}\\
+  \texttt{- calibData : Dataset}\nodepart{three}
+  \texttt{+ calibrate() : void}\\
+  \texttt{+ apply(img) : List}};
+
+\node[AB](tr) at (8,0){
+  \textit{\color{abstrhdr}$\langle\langle$\rangle\rangle$ Transform}\nodepart{two}
+  \texttt{- name : String}\\
+  \texttt{- severity : float}\nodepart{three}
+  \texttt{+ apply(img) : Tensor}\\
+  \texttt{+ validate() : bool}};
+
+\node[CB](sc) at (12,0){
+  \textbf{\color{hdrblue}StabilityChecker}\nodepart{two}
+  \texttt{- threshold : float}\\
+  \texttt{- windowSize : int}\nodepart{three}
+  \texttt{+ check() : bool}\\
+  \texttt{+ computeDisag() : float}};
+
+% Layer 2 (Concrete transforms: y=-2.8)
+\node[CB](rot) at (4.5,-2.8){
+  \textbf{\color{hdrblue}RotationTransform}\nodepart{two}
+  \texttt{- angle : float}\nodepart{three}
+  \texttt{+ apply() : Tensor}};
+
+\node[CB](bri) at (7.0,-2.8){
+  \textbf{\color{hdrblue}BrightnessTransform}\nodepart{two}
+  \texttt{- factor : float}\nodepart{three}
+  \texttt{+ apply() : Tensor}};
+
+\node[CB](crp) at (9.5,-2.8){
+  \textbf{\color{hdrblue}CropTransform}\nodepart{two}
+  \texttt{- ratio : float}\nodepart{three}
+  \texttt{+ apply() : Tensor}};
+
+\node[CB](noi) at (12.0,-2.8){
+  \textbf{\color{hdrblue}NoiseTransform}\nodepart{two}
+  \texttt{- stdDev : float}\nodepart{three}
+  \texttt{+ apply() : Tensor}};
+
+% Layer 3 (y=-5.5)
+\node[AB](vm) at (0,-5.5){
+  \textit{\color{abstrhdr}$\langle\langle$\rangle\rangle$ VisionModel}\nodepart{two}
+  \texttt{- modelId : String}\\
+  \texttt{- version : String}\nodepart{three}
+  \texttt{+ predict() : Prediction}\\
+  \texttt{+ batchPredict() : List}};
+
+\node[CB](pred) at (4,-5.5){
+  \textbf{\color{hdrblue}Prediction}\nodepart{two}
+  \texttt{- label : String}\\
+  \texttt{- confidence : float}\nodepart{three}
+  \texttt{+ isReliable() : bool}\\
+  \texttt{+ getLabel() : String}};
+
+\node[CB](cb) at (8,-5.5){
+  \textbf{\color{hdrblue}CircuitBreaker}\nodepart{two}
+  \texttt{- state : CBState}\\
+  \texttt{- failureCount : int}\nodepart{three}
+  \texttt{+ evaluate() : Action}\\
+  \texttt{+ trip() : void}};
+
+\node[AB](cbs) at (12,-5.5){
+  \textit{\color{abstrhdr}$\langle\langle$\rangle\rangle$ CBState}\nodepart{two}
+  \texttt{CLOSED}\\
+  \texttt{OPEN}\\
+  \texttt{HALF\_OPEN}\nodepart{three}\phantom{x}};
+
+% Layer 4 (y=-9.0)
+\node[CB](fh) at (0,-9.0){
+  \textbf{\color{hdrblue}FallbackHandler}\nodepart{two}
+  \texttt{- strategy : String}\nodepart{three}
+  \texttt{+ handle() : Prediction}\\
+  \texttt{+ routeToHuman() : void}};
+
+\node[CB](ood) at (4,-9.0){
+  \textbf{\color{hdrblue}OODDataset}\nodepart{two}
+  \texttt{- samples : List}\nodepart{three}
+  \texttt{+ generate() : void}\\
+  \texttt{+ getSample() : Tensor}};
+
+\node[CB](me) at (8,-9.0){
+  \textbf{\color{hdrblue}MetricsEvaluator}\nodepart{two}
+  \texttt{- auroc : float}\nodepart{three}
+  \texttt{+ computeAUROC() : float}\\
+  \texttt{+ reportOverhead() : float}};
+
+\node[CB](ot) at (12,-9.0){
+  \textbf{\color{hdrblue}OfflineTester}\nodepart{two}
+  \texttt{- testDataset : OODDataset}\nodepart{three}
+  \texttt{+ runTest() : Report}\\
+  \texttt{+ detectWeaknesses() : List}};
+
+% Connections
+\draw[assoc]   (img.east) -- node[above,font=\tiny\sffamily]{uses} (te.west);
+\draw[compose] (te.east)  -- node[above,font=\tiny\sffamily]{contains} (tr.west);
+\draw[assoc]   (tr.east)  -- node[above,font=\tiny\sffamily]{feeds} (sc.west);
+
+\draw[inherit] (rot.north) -- ++(0,0.55) -| (tr.south);
+\draw[inherit] (bri.north) -- ++(0,0.55) -| (tr.south);
+\draw[inherit] (crp.north) -- ++(0,0.55) -| (tr.south);
+\draw[inherit] (noi.north) -- ++(0,0.55) -| (tr.south);
+
+\draw[assoc] (img.south) -- (vm.north);
+\draw[assoc] (vm.east)   -- node[above,font=\tiny\sffamily]{produces} (pred.west);
+\draw[assoc] (pred.east) -- node[above,font=\tiny\sffamily]{evaluated by} (cb.west);
+\draw[assoc] (cb.east)   -- node[above,font=\tiny\sffamily]{state} (cbs.west);
+
+% SC -> CB (routed via x=13.8, clear of noi right edge 13.0)
+\draw[assoc] (sc.south) -- ++(0,-0.9) -- ++(1.8,0) -- ++(0,-2.2) -- ++(-5.8,0) -- (cb.north);
+
+% CB -> FH (routed via y=-7.3)
+\draw[assoc] (cb.south) -- ++(0,-0.9) -- ++(-8.0,0) -- (fh.north);
+
+% FH -> VM (routed left via x=-2.0)
+\draw[dep] (fh.west) -- ++(-0.7,0) -- ++(0,3.5) -- (vm.west);
+
+\draw[dep]   (fh.east)  -- node[above,font=\tiny\sffamily]{uses} (ood.west);
+\draw[assoc] (ood.east) -- node[above,font=\tiny\sffamily]{evaluated by} (me.west);
+\draw[assoc] (me.east)  -- node[above,font=\tiny\sffamily]{used in} (ot.west);
+
+% OT -> OOD (routed below Layer 4 via y=-10.5)
+\draw[assoc] (ot.south) -- ++(0,-0.6) -- ++(-8.0,0) -- (ood.south);
+
+\end{tikzpicture}
+\end{center}
+
+\end{document}

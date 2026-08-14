@@ -1,0 +1,118 @@
+\documentclass[a4paper,landscape]{article}
+\usepackage[margin=1.0cm]{geometry}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, shapes, shapes.ellipse, fit, backgrounds, shapes.geometric}
+\usepackage{xcolor}
+
+\definecolor{sysblue}{RGB}{20,70,140}
+\definecolor{sysfill}{RGB}{228,237,255}
+\definecolor{ucbdr}{RGB}{50,110,200}
+\definecolor{ucfill}{RGB}{248,252,255}
+\definecolor{extbdr}{RGB}{155,95,0}
+\definecolor{extfill}{RGB}{255,246,210}
+\definecolor{actbdr}{RGB}{30,90,160}
+\definecolor{actfill}{RGB}{235,245,255}
+
+\tikzset{
+  UC/.style={draw=ucbdr,fill=ucfill,thick,ellipse,minimum width=3.6cm,minimum height=1.0cm,font=\scriptsize\sffamily,align=center,inner sep=1pt},
+  EC/.style={draw=extbdr,fill=extfill,thick,ellipse,minimum width=3.6cm,minimum height=1.0cm,font=\scriptsize\sffamily,align=center,inner sep=1pt},
+  AL/.style={thick,actbdr},
+  IA/.style={->,>=Latex,dashed,ucbdr,thick},
+  EA/.style={->,>=Latex,dashed,extbdr,thick},
+}
+
+\newcommand{\ACT}[3]{%
+  \begin{scope}[shift={(#1,#2)}]
+    \draw[thick,actbdr,fill=actfill](0,0.46)circle(0.19cm);
+    \draw[thick,actbdr](0,0.27)--(0,-0.10);
+    \draw[thick,actbdr](-0.23,0.08)--(0.23,0.08);
+    \draw[thick,actbdr](0,-0.10)--(-0.18,-0.42);
+    \draw[thick,actbdr](0,-0.10)--(0.18,-0.42);
+    \node[font=\scriptsize\bfseries\sffamily,text=actbdr,align=center,below=0.48cm] at (0,0){#3};
+  \end{scope}}
+
+\begin{document}
+\pagestyle{empty}
+
+\begin{center}
+  {\Large\bfseries\sffamily\color{sysblue} Use Case Diagram --- Metamorphic Circuit Breaker Framework}\\[3pt]
+  {\small\sffamily\color{gray} Metamorphic Circuit Breaker: A Runtime Reliability Layer for Detecting Transform-Brittleness in Deployed Vision Models}
+\end{center}
+\vspace{4pt}
+
+\begin{center}
+\begin{tikzpicture}[font=\scriptsize\sffamily]
+
+\draw[draw=sysblue,fill=sysfill,thick,rounded corners=7pt] (1.0,6.0) rectangle (15.5,-5.2);
+\node[font=\small\bfseries\sffamily\color{sysblue},anchor=north west] at (1.2,6.0){Metamorphic Circuit Breaker System};
+
+\ACT{-1.0}{4.0}{ML Engineer}
+\ACT{-1.0}{0.5}{Vision Model}
+\ACT{-1.0}{-3.0}{Deployment\\[-1pt]Env.}
+
+\ACT{16.8}{3.2}{Human\\[-1pt]Reviewer}
+\ACT{16.8}{0.5}{Fallback\\[-1pt]Model}
+\ACT{16.8}{-2.5}{Monitoring\\[-1pt]System}
+
+\node[UC](uc1)  at (3.8, 5.0){Calibrate\\Transformations};
+\node[UC](uc2)  at (3.8, 3.5){Run Offline\\Metamorphic Test};
+\node[UC](uc3)  at (3.8, 2.0){Configure\\Circuit Breaker};
+\node[UC](uc4)  at (3.8, 0.5){Submit\\Input Image};
+\node[UC](uc5)  at (3.8,-1.0){Trigger Online\\Monitoring};
+\node[UC](uc6)  at (3.8,-2.5){Sample / Filter\\Predictions};
+\node[UC](uc7)  at (3.8,-4.0){Detect\\Weaknesses};
+
+\node[UC](uc8)  at (8.5, 5.0){Apply Semantic\\Transformations};
+\node[UC](uc9)  at (8.5, 3.5){Batch Inference\\on Variants};
+\node[UC](uc10) at (8.5, 2.0){Check Prediction\\Stability};
+\node[UC](uc11) at (8.5, 0.5){Evaluate\\Consistency};
+\node[UC](uc12) at (8.5,-1.0){Trip Circuit\\Breaker};
+\node[UC](uc13) at (8.5,-2.5){Reset Circuit\\Breaker};
+\node[UC](uc14) at (8.5,-4.0){Generate OOD\\Test Dataset};
+
+\node[EC](uc15) at (13.2, 4.2){Route to\\Human Reviewer};
+\node[EC](uc16) at (13.2, 2.7){Route to\\Fallback Model};
+\node[EC](uc17) at (13.2, 1.2){Flag as\\Low-Confidence};
+\node[UC](uc18) at (13.2,-0.3){Compute AUROC\\/ FPR95};
+\node[UC](uc19) at (13.2,-1.8){Report Inference\\Overhead};
+\node[UC](uc20) at (13.2,-3.3){Produce\\Reliability Report};
+
+\draw[AL](-0.8,4.0)--(uc1.west);
+\draw[AL](-0.8,4.0)--(uc2.west);
+\draw[AL](-0.8,4.0)--(uc3.west);
+\draw[AL](-0.8,4.0)--(uc7.west);
+
+\draw[AL](-0.8,0.5)--(uc4.west);
+\draw[AL](-0.8,0.5)--++(1.5,0)--++(0,3.0)--(uc9.west);
+
+\draw[AL](-0.8,-3.0)--(uc5.west);
+\draw[AL](-0.8,-3.0)--(uc6.west);
+
+\draw[AL](16.6,3.2)--(uc15.east);
+\draw[AL](16.6,0.5)--(uc16.east);
+\draw[AL](16.6,-2.5)--(uc18.east);
+\draw[AL](16.6,-2.5)--(uc19.east);
+\draw[AL](16.6,-2.5)--(uc20.east);
+
+\draw[IA](uc1.east)--node[above,font=\tiny\sffamily]{$\langle\langle$\rangle\rangle$}(uc8.west);
+\draw[IA](uc2.east)--node[above,font=\tiny\sffamily]{$\langle\langle$\rangle\rangle$}(uc9.west);
+\draw[IA](uc5.east)--++(0.4,0)--++(0,3.2)--(uc10.west);
+\draw[IA](uc8.south)--node[right,font=\tiny\sffamily]{$\langle\langle$\rangle\rangle$}(uc9.north);
+\draw[IA](uc10.south)--node[right,font=\tiny\sffamily]{$\langle\langle$\rangle\rangle$}(uc11.north);
+\draw[IA](uc11.south)--node[right,font=\tiny\sffamily]{$\langle\langle$\rangle\rangle$}(uc12.north);
+\draw[IA](uc7.east)--node[above,font=\tiny\sffamily]{$\langle\langle$\rangle\rangle$}(uc14.west);
+\draw[IA](uc2.east)--++(0.5,0)--++(0,-7.9)--(uc14.west);
+\draw[IA](uc7.south)--++(0,-0.5)--++(9.4,0)--(uc18.south);
+\draw[IA](uc7.east)--++(5.1,0)--++(0,0.7)--(uc20.west);
+
+\draw[EA](uc13.north)--node[right,font=\tiny\sffamily]{\color{extbdr}$\langle\langle$\rangle\rangle$}(uc12.south);
+\draw[EA](uc6.north)--node[right,font=\tiny\sffamily]{\color{extbdr}$\langle\langle$\rangle\rangle$}(uc5.south);
+\draw[EA](uc19.north)--node[right,font=\tiny\sffamily]{\color{extbdr}$\langle\langle$\rangle\rangle$}(uc18.south);
+\draw[EA](uc15.west)--++(-0.5,0)--++(0,-5.5)--(uc12.north east);
+\draw[EA](uc16.west)--++(-0.3,0)--++(0,-4.0)--(uc12.east);
+\draw[EA](uc17.west)--++(-0.1,0)--++(0,-2.5)--(uc12.south east);
+
+\end{tikzpicture}
+\end{center}
+
+\end{document}
