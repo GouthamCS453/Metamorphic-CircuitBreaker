@@ -106,8 +106,10 @@ def _brightness(
     """
     Multiply brightness by *brightness* and contrast by *contrast*.
 
-    Simulates over-exposure or varying ambient lighting conditions,
-    which are common sources of distribution shift in dermatoscopy images.
+    Apply a Gaussian low-pass filter.
+    
+    This transformation evaluates robustness to image quality
+    degradation and loss of high-frequency information.
 
     Args:
         image:      Input PIL Image.
