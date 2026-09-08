@@ -5,7 +5,7 @@
 
 ---
 
-## Project Overview
+## Project Overview 
 
 This project implements the **initial phase** of the Metamorphic Circuit Breaker Framework — a runtime safety layer that detects when a deployed vision model gives inconsistent predictions under semantically-irrelevant image transformations (*transform-brittleness*).
 
