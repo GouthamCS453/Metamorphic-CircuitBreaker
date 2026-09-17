@@ -1,0 +1,9 @@
+{
+  "preset_id": "preset_boundary_flips",
+  "name": "\ud83d\udfe2 Boundary Sensitivity (4 Flips, but Safe)",
+  "expected_state": "CLOSED",
+  "cbi_ref": "0.1792",
+  "flips_ref": "4 / 22",
+  "description": "Illustrates Phase 2 resilience to false alarms. 4 flips occur, but exclusively at extreme severe boundary tiers (0.80x zoom, 0.25x saturation, high noise). No single family reaches tau_fam=0.35, keeping CBI < 0.25.",
+  "image_filename": "ISIC_0013736_downsampled.jpg"
+}

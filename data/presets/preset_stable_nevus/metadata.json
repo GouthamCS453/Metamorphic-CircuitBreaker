@@ -1,0 +1,9 @@
+{
+  "preset_id": "preset_stable_nevus",
+  "name": "\ud83d\udfe2 Rock-Solid Lesion (0 Flips)",
+  "expected_state": "CLOSED",
+  "cbi_ref": "0.0156",
+  "flips_ref": "0 / 22",
+  "description": "Demonstrates normal, safe operation. Predictions remain 100% stable across all geometric, photometric, and sensor noise perturbations. Circuit Breaker stays CLOSED (Auto-Approved).",
+  "image_filename": "ISIC_0067135.jpg"
+}

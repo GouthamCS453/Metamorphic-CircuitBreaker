@@ -1,0 +1,9 @@
+{
+  "preset_id": "preset_half_open_warning",
+  "name": "\ud83d\udfe1 Systematic Geometric Fragility (3 Mild Flips)",
+  "expected_state": "HALF_OPEN",
+  "cbi_ref": "0.3738",
+  "flips_ref": "3 / 22",
+  "description": "Demonstrates how a small number of MILD flips in a single family compromises that family (IR_geom >= 0.35), pushing CBI into HALF-OPEN [0.25 - 0.55]. Approved with clinical warning notice.",
+  "image_filename": "ISIC_0059024.jpg"
+}

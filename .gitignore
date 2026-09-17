@@ -17,19 +17,37 @@ venv/
 env/
 ENV/
 
-# ── Dataset & large files ──────────────────────────────────────────────────────
-data/
+# ── Dataset (large raw files only — presets are tracked) ──────────────────────
+data/isic2019/
 *.zip
 *.tar.gz
 *.tar
 *.h5
 *.hdf5
 
-# ── Model checkpoints ─────────────────────────────────────────────────────────
-checkpoints/
+# ── Model checkpoints (large binary files) ────────────────────────────────────
+checkpoints/best_model.pth
+checkpoints/best_model_*.pth
+*.pth
+*.pt
+*.ckpt
+
+# Allow checkpoint metadata / split CSVs to be tracked
+!checkpoints/val_split.csv
+!checkpoints/train_split.csv
+!checkpoints/training_log.json
 
 # ── Run outputs ───────────────────────────────────────────────────────────────
 outputs/
+
+# ── Research Paper compiled / binary exports (originals tracked if desired) ───
+*.pdf
+*.docx
+*.doc
+*.html
+
+# Allow Phase 2 methodology markdown to be tracked
+!Phase2_Methodology_and_Architecture.md
 
 # ── Jupyter ───────────────────────────────────────────────────────────────────
 .ipynb_checkpoints/
@@ -60,3 +78,19 @@ htmlcov/
 
 # ── Streamlit cache ───────────────────────────────────────────────────────────
 .streamlit/
+
+# ── Temporary / one-off scripts (not part of framework) ──────────────────────
+scripts/write_readme.py
+scripts/test_*.py
+scripts/generate_pdf.py
+scripts/build_ieee_paper.py
+scripts/test_latex_to_word.py
+scripts/test_layout.py
+
+# ── Diagrams (LaTeX source deleted; ignore stale artefacts) ───────────────────
+diagrams/
+*.tex
+*.aux
+*.out
+*.fls
+*.fdb_latexmk

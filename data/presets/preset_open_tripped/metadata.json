@@ -1,0 +1,9 @@
+{
+  "preset_id": "preset_open_tripped",
+  "name": "\ud83d\udd34 Multi-Family Collapse (12 Flips - Tripped!)",
+  "expected_state": "OPEN",
+  "cbi_ref": "0.7183",
+  "flips_ref": "12 / 22",
+  "description": "Demonstrates full safety interception. The model collapses across rotation, lighting, and noise simultaneously. Both IR_geom and IR_photo cross 0.35 (CFS=0.667). CBI = 0.7183 >= 0.55 -> Breaker TRIPS to OPEN.",
+  "image_filename": "ISIC_0055454.jpg"
+}

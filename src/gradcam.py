@@ -89,10 +89,14 @@ class ConvNeXtGradCAM:
         target = self._get_target_layer()
 
         def fwd_hook(module, inp, out):
-            # Retain gradient on the non-leaf activation tensor so that
-            # torch.autograd.grad can compute it without retain_graph=True.
+            # Always capture the activation map.
+            # Only call retain_grad() when grad computation is enabled (i.e.,
+            # during GradCAM's @torch.enable_grad() forward pass). During
+            # regular predict() calls wrapped in torch.no_grad(), the tensor
+            # has requires_grad=False and retain_grad() would raise a RuntimeError.
             act = self._to_nchw(out)
-            act.retain_grad()
+            if act.requires_grad:
+                act.retain_grad()
             self._activations = act
 
         self._handles.append(target.register_forward_hook(fwd_hook))
@@ -348,3 +352,111 @@ def generate_all_wrong_prediction_gradcams(
 
     print(f"[GradCAM] Saved {len(saved)} comparison figure(s) → {output_dir}")
     return saved
+
+
+# ─── In-Memory Comparison Figure for Streamlit ───────────────────────────────
+
+def make_comparison_figure(
+    original_image: Image.Image,
+    baseline_cam: np.ndarray,
+    transformed_image: Image.Image,
+    flip_cam: np.ndarray,
+    baseline_label: str,
+    baseline_conf: float,
+    flipped_label: str,
+    flipped_conf: float,
+    test_name: str,
+    out_size: int = 224,
+    alpha: float = 0.50,
+) -> Image.Image:
+    """
+    Compose a 4-panel side-by-side Grad-CAM attention comparison as a PIL image.
+
+    Layout (2 rows × 2 columns):
+    ┌────────────────────────┬────────────────────────┐
+    │  Original Image        │  Transformed Image     │
+    │  Pred: <baseline_label>│  Pred: <flipped_label> │
+    ├────────────────────────┼────────────────────────┤
+    │  Baseline GradCAM      │  Flipped GradCAM       │
+    │  (attention heatmap)   │  (attention heatmap)   │
+    └────────────────────────┴────────────────────────┘
+
+    Args:
+        original_image:    PIL Image of the original input.
+        baseline_cam:      float32 ndarray (H, W) GradCAM for original.
+        transformed_image: PIL Image of the metamorphic-transformed input.
+        flip_cam:          float32 ndarray (H, W) GradCAM for transformed.
+        baseline_label:    Predicted class label on original.
+        baseline_conf:     Confidence score on original.
+        flipped_label:     Predicted class label after transformation.
+        flipped_conf:      Confidence score after transformation.
+        test_name:         Name of the metamorphic transformation applied.
+        out_size:          Square size (pixels) for each panel.
+        alpha:             Heatmap overlay opacity.
+
+    Returns:
+        PIL RGB Image of size (out_size*2 + padding, out_size*2 + label_height).
+    """
+    padding = 8
+    label_h = 30
+    font_size = 12
+    total_w = out_size * 2 + padding * 3
+    total_h = out_size * 2 + label_h * 3 + padding * 4
+
+    canvas = Image.new("RGB", (total_w, total_h), color=(20, 20, 40))
+
+    try:
+        from PIL import ImageDraw, ImageFont
+        draw = ImageDraw.Draw(canvas)
+        try:
+            font = ImageFont.truetype("arial.ttf", font_size)
+            bold_font = ImageFont.truetype("arialbd.ttf", font_size + 1)
+        except Exception:
+            font = ImageFont.load_default()
+            bold_font = font
+    except Exception:
+        draw = None
+        font = None
+        bold_font = None
+
+    def _paste_image(pil_img: Image.Image, x: int, y: int) -> None:
+        resized = pil_img.resize((out_size, out_size), Image.Resampling.LANCZOS)
+        canvas.paste(resized, (x, y))
+
+    def _paste_overlay(pil_img: Image.Image, cam: np.ndarray, x: int, y: int) -> None:
+        ov = overlay_heatmap_on_image(pil_img, cam, alpha=alpha, out_size=out_size)
+        canvas.paste(Image.fromarray(ov), (x, y))
+
+    def _label(text: str, x: int, y: int, color=(200, 200, 200)) -> None:
+        if draw and font:
+            draw.text((x, y), text, fill=color, font=font)
+
+    # Row 0 labels
+    x_left = padding
+    x_right = out_size + padding * 2
+    y0_label = padding
+    y0_img = y0_label + label_h
+    y1_label = y0_img + out_size + padding
+    y1_img = y1_label + label_h
+
+    _label(f"Original → {baseline_label} ({baseline_conf:.1%})", x_left, y0_label, color=(100, 220, 160))
+    _paste_image(original_image, x_left, y0_img)
+
+    flip_color = (240, 80, 80) if flipped_label != baseline_label else (100, 220, 160)
+    _label(f"{test_name} → {flipped_label} ({flipped_conf:.1%})", x_right, y0_label, color=flip_color)
+    _paste_image(transformed_image, x_right, y0_img)
+
+    _label("Baseline GradCAM Attention", x_left, y1_label, color=(180, 180, 255))
+    _paste_overlay(original_image, baseline_cam, x_left, y1_img)
+
+    _label("Transformed GradCAM Attention", x_right, y1_label, color=(255, 200, 100))
+    _paste_overlay(transformed_image, flip_cam, x_right, y1_img)
+
+    # Footer
+    if draw and font:
+        footer_y = y1_img + out_size + padding
+        footer = "⚠ ATTENTION SHIFT DETECTED" if flipped_label != baseline_label else "✓ Prediction Stable"
+        footer_color = (240, 100, 100) if flipped_label != baseline_label else (100, 220, 160)
+        draw.text((padding, footer_y), footer, fill=footer_color, font=bold_font)
+
+    return canvas
