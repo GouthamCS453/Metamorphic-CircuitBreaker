@@ -16,19 +16,15 @@ from torchvision import transforms
 
 # ─── Constants ────────────────────────────────────────────────────────────────
 
-# ISIC 2019 class names — column order matches GroundTruth CSV (8 classes, no UNK)
-CLASS_NAMES = ["MEL", "NV", "BCC", "AK", "BKL", "DF", "VASC", "SCC"]
+# GTSRB class names — class IDs 0 to 42
+CLASS_NAMES = [str(i) for i in range(43)]
+
 CLASS_FULL_NAMES = {
-    "MEL":  "Melanoma",
-    "NV":   "Melanocytic Nevus",
-    "BCC":  "Basal Cell Carcinoma",
-    "AK":   "Actinic Keratosis",
-    "BKL":  "Benign Keratosis",
-    "DF":   "Dermatofibroma",
-    "VASC": "Vascular Lesion",
-    "SCC":  "Squamous Cell Carcinoma",
+    str(i): f"Traffic Sign Class {i}"
+    for i in range(43)
 }
-NUM_CLASSES = len(CLASS_NAMES)  # 8
+
+NUM_CLASSES = len(CLASS_NAMES)  # 43
 
 # Root paths (resolved relative to this file's grandparent = project root)
 ROOT_DIR       = Path(__file__).resolve().parent.parent
@@ -58,18 +54,8 @@ def get_device() -> torch.device:
 # ─── Model ────────────────────────────────────────────────────────────────────
 
 def build_model(num_classes: int = NUM_CLASSES, pretrained: bool = True) -> torch.nn.Module:
-    """
-    Build a ConvNeXt-Base model using timm.
-
-    Args:
-        num_classes: Output head size (9 for ISIC 2019).
-        pretrained:  Load ImageNet-1K weights when True.
-
-    Returns:
-        torch.nn.Module with a fully-connected classification head.
-    """
     model = timm.create_model(
-        "convnext_base",
+        "mobilenetv3_small_100",
         pretrained=pretrained,
         num_classes=num_classes,
     )

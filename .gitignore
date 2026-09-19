@@ -19,6 +19,7 @@ ENV/
 
 # ── Dataset (large raw files only — presets are tracked) ──────────────────────
 data/isic2019/
+data/gtsrb/
 *.zip
 *.tar.gz
 *.tar

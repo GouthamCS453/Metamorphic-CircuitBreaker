@@ -56,10 +56,10 @@ print("  [OK] CBI formula verified")
 print("  [OK] DummyVisionModel model-agnostic check passed")
 
 print("\n" + "=" * 60)
-print("STEP 3: ConvNeXtAdapter evaluation pipeline")
+print("STEP 3: MobileNetAdapter evaluation pipeline")
 print("=" * 60)
-from src.models.convnext_adapter import ConvNeXtAdapter
-model = ConvNeXtAdapter()
+from src.models.mobilenet_adapter import MobileNetAdapter
+model = MobileNetAdapter()
 cb2 = MetamorphicCircuitBreaker(model)
 t0 = __import__("time").time()
 report2 = cb2.evaluate(img)
@@ -68,7 +68,7 @@ print(f"  Baseline: {report2.baseline_label} ({report2.baseline_confidence:.2%})
 print(f"  CBI: {report2.cbi}  State: {report2.state.value}")
 print(f"  Elapsed: {elapsed:.2f}s  ({len(HIERARCHICAL_TEST_MATRIX)} tests)")
 assert 0.0 <= report2.cbi <= 1.0
-print("  [OK] ConvNeXt evaluation pipeline verified")
+print("  [OK] MobileNet evaluation pipeline verified")
 
 print("\n" + "=" * 60)
 print("STEP 4: evaluate_with_gradcam (GradCAM integration)")

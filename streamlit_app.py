@@ -80,10 +80,10 @@ st.markdown("""
 
 # Helpers
 
-@st.cache_resource(show_spinner="Loading ConvNeXt-Base model (one-time ~2s)...")
+@st.cache_resource(show_spinner="Loading MobileNetV3-Small model (one-time ~2s)...")
 def _load_model():
-    from src.models.convnext_adapter import ConvNeXtAdapter
-    return ConvNeXtAdapter()
+    from src.models.mobilenet_adapter import MobileNetAdapter
+    return MobileNetAdapter()
 
 
 def _make_cb(alpha, beta, gamma, tau_fam, theta_warn, theta_trip):
@@ -204,7 +204,7 @@ def _render_gradcam(report, gcam, orig_img):
 <b>Confidence:</b>&nbsp; {report.baseline_confidence:.1%}<br>
 <b>Prediction flips detected:</b>&nbsp; {n_flips} / {len(report.test_results)} metamorphic tests<br>
 <b>Peak unstable family:</b>&nbsp; {FAM_LABEL.get(report.peak_family, report.peak_family)} (IR_k = {report.peak_family_score:.3f})<br><br>
-<small style='color:#888'>GradCAM heatmap shows where ConvNeXt-Base focused attention.
+<small style='color:#888'>GradCAM heatmap shows where MobileNetV3-Small focused attention.
 A healthy model focuses on the lesion. In a flipped prediction, attention drifts
 to boundary artifacts, rotation halos, or dermatoscope rings.</small>
 </div>
@@ -310,7 +310,7 @@ with tab_live:
   <span class='live-badge'>LIVE INFERENCE ENGINE (REAL-TIME PYTORCH)</span><br>
   <span style='font-size:2rem;font-weight:900;color:#e2e2f0'>Metamorphic Circuit Breaker Studio</span><br>
   <span style='color:#8080aa;font-size:.92rem'>
-    Runs 22 metamorphic tests per image against the trained ConvNeXt-Base model in real time.
+    Runs 22 metamorphic tests per image against the trained MobileNetV3-Small model in real time.
   </span>
 </div>
 """, unsafe_allow_html=True)
@@ -337,7 +337,7 @@ with tab_live:
             unsafe_allow_html=True)
         st.markdown(
             "<div class='card'><b>Getting OPEN or HALF-OPEN states</b><br>"
-            "<small>The ConvNeXt model is trained on ISIC 2019 and is stable on most of those images.<br><br>"
+            "<small>The MobileNetV3-Small model is trained on GTSRB traffic-sign images.<br><br>"
             "To see all three states:<br>"
             "1. Use the verified demo presets below.<br>"
             "2. Upload images from a <b>different acquisition source</b> — smartphone photos, "
@@ -389,7 +389,7 @@ with tab_live:
 
     if run_btn and uploaded_img is not None:
         with st.status("Running live circuit breaker analysis...", expanded=True) as status:
-            st.write("Loading PyTorch ConvNeXt model...")
+            st.write("Loading PyTorch MobileNetV3-Small model...")
             model = _load_model()
             st.write(f"Executing {len(HIERARCHICAL_TEST_MATRIX)} metamorphic test forward passes...")
             t0 = time.time()

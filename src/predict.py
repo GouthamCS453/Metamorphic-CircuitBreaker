@@ -13,8 +13,8 @@ The full result is saved as ``predictions_table.csv`` inside the run directory.
 
 Columns
 -------
-image_id            : ISIC image identifier
-ground_truth        : Integer class index (0-8)
+image_id            : GTSRB image identifier
+ground_truth        : Integer class index (0-42)
 ground_truth_name   : Class name string
 mr_id               : "Original", "MR1" … "MR8"
 mr_name             : Human-readable transform name
@@ -36,13 +36,12 @@ from typing import Optional
 
 import pandas as pd
 import torch
-import torch.nn.functional as F
+from src.models.base import BaseVisionModel
 from PIL import Image
 from tqdm import tqdm
 
 from src.utils import (
     CLASS_NAMES, CHECKPOINT_DIR,
-    pil_to_tensor, get_device, load_model,
 )
 from src.metamorphic import MR_REGISTRY
 
@@ -51,35 +50,26 @@ from src.metamorphic import MR_REGISTRY
 
 class PredictionRunner:
     """
-    Wraps the model and runs batched inference for metamorphic testing.
+    Runs inference through the model-agnostic BaseVisionModel interface.
 
     Args:
-        model:  Loaded ConvNeXt model in ``eval()`` mode.
-        device: Compute device.
+        model: A BaseVisionModel implementation, such as MobileNetAdapter.
     """
 
-    def __init__(self, model: torch.nn.Module, device: torch.device) -> None:
-        self.model  = model
-        self.device = device
+    def __init__(self, model: BaseVisionModel) -> None:
+        self.model = model
 
-    @torch.no_grad()
     def predict_pil(self, pil_image: Image.Image):
         """
-        Run single-image inference.
-
-        Args:
-            pil_image: Input PIL Image.
+        Run single-image inference through BaseVisionModel.predict().
 
         Returns:
-            pred_class : argmax class index.
-            confidence : softmax probability for *pred_class*.
-            all_probs  : full softmax probability vector as a list.
+            pred_class : predicted class index.
+            confidence : confidence for predicted class.
+            all_probs  : full probability vector as a list.
         """
-        tensor = pil_to_tensor(pil_image).to(self.device)
-        logits = self.model(tensor)
-        probs  = F.softmax(logits, dim=1).squeeze()
-        pred   = int(probs.argmax().item())
-        return pred, float(probs[pred].item()), probs.cpu().tolist()
+        pred, _, confidence, all_probs = self.model.predict(pil_image)
+        return pred, confidence, all_probs
 
     def run_on_sample(
         self,
@@ -91,7 +81,7 @@ class PredictionRunner:
         Run inference on the original image and all 8 MR variants.
 
         Args:
-            image_id:     ISIC identifier string.
+            image_id:     GTSRB image identifier string.
             orig_image:   Original PIL Image.
             ground_truth: Integer class index.
 
@@ -153,7 +143,7 @@ def sample_images_from_val_split(
     Args:
         n_samples: Number of images to sample.
         seed:      Random seed for reproducible sampling.
-        data_dir:  ISIC 2019 root directory (fallback only).
+        data_dir:  GTSRB root directory (fallback only).
 
     Returns:
         DataFrame with columns ``image``, ``image_path``, ``label``.
@@ -165,10 +155,10 @@ def sample_images_from_val_split(
         print(f"[Predict] Loaded val split: {len(df)} images")
     elif data_dir is not None:
         # Lazy import to avoid circular dependency with train.py
-        from src.train import load_isic_dataframe
+        from src.train import load_gtsrb_dataframe
         from sklearn.model_selection import train_test_split
 
-        df_full = load_isic_dataframe(data_dir)
+        df_full = load_gtsrb_dataframe(data_dir)
         _, df   = train_test_split(
             df_full, test_size=0.30,
             stratify=df_full["label"], random_state=seed,
@@ -187,7 +177,7 @@ def sample_images_from_val_split(
 # ─── Main runner ────────────────────────────────────────────────────────────────
 
 def run_predictions(
-    model: torch.nn.Module,
+    model: BaseVisionModel,
     device: torch.device,
     sample_df: pd.DataFrame,
     output_dir: Path,
@@ -204,7 +194,7 @@ def run_predictions(
     * Writes ``predictions_table.csv``.
 
     Args:
-        model:      Trained ConvNeXt model.
+        model:      Trained MobileNetV3-Small model.
         device:     Compute device.
         sample_df:  DataFrame with columns ``image``, ``image_path``, ``label``.
         output_dir: Run-level output directory.
@@ -212,7 +202,7 @@ def run_predictions(
     Returns:
         DataFrame with one row per (image, transform) pair.
     """
-    runner = PredictionRunner(model, device)
+    runner = PredictionRunner(model)
 
     sample_img_dir  = output_dir / "sample_images"
     transformed_dir = output_dir / "transformed"

@@ -1,6 +1,5 @@
 """
-src/train.py — Train ConvNeXt-Base on the ISIC 2019 skin-lesion dataset.
-
+src/train.py — Train MobileNetV3-Small on the GTSRB traffic-sign dataset.
 Steps
 -----
 1. Load ISIC_2019_Training_GroundTruth.csv and resolve image paths.
@@ -12,7 +11,7 @@ Steps
 
 Usage
 -----
-    python src/train.py --data_dir data/isic2019 --epochs 30 --batch_size 32
+    python src/train.py --data_dir data/gtsrb --epochs 30 --batch_size 32
 """
 
 from __future__ import annotations
@@ -44,7 +43,7 @@ from src.utils import (
 
 # ─── Dataset ──────────────────────────────────────────────────────────────────
 
-class ISICDataset(Dataset):
+class GTSRBDataset(Dataset):
     """
     PyTorch Dataset for ISIC 2019.
 
@@ -75,55 +74,52 @@ class ISICDataset(Dataset):
         return image, label
 
 
-def load_isic_dataframe(data_dir: Path) -> pd.DataFrame:
+def load_gtsrb_dataframe(data_dir: Path) -> pd.DataFrame:
     """
-    Parse ISIC_2019_Training_GroundTruth.csv and resolve image file paths.
+    Parse GTSRB Train.csv and resolve image file paths.
 
-    Expected layout::
+    Expected layout:
 
         data_dir/
-          ISIC_2019_Training_GroundTruth.csv
-          ISIC_2019_Training_Input/
-            ISIC_XXXXXXX.jpg
-
-    The CSV has one-hot encoded columns (MEL, NV, BCC, AK, BKL, DF, VASC,
-    SCC, UNK). This function decodes them to a single integer ``label`` column.
-
-    Args:
-        data_dir: Path to the ISIC 2019 dataset root.
+          Train.csv
+          Train/
+            0/
+            1/
+            ...
+            42/
 
     Returns:
         DataFrame with columns ``image``, ``image_path``, ``label``.
     """
-    csv_path = data_dir / "ISIC_2019_Training_GroundTruth.csv"
-    img_dir  = data_dir / "ISIC_2019_Training_Input"
+    csv_path = data_dir / "Train.csv"
 
     if not csv_path.exists():
-        raise FileNotFoundError(f"Ground-truth CSV not found: {csv_path}")
-    if not img_dir.exists():
-        raise FileNotFoundError(f"Image directory not found: {img_dir}")
+        raise FileNotFoundError(f"GTSRB Train.csv not found: {csv_path}")
 
     df = pd.read_csv(csv_path)
 
-    # Decode one-hot -> integer label
-    class_cols = [c for c in CLASS_NAMES if c in df.columns]
-    df["label"] = df[class_cols].values.argmax(axis=1)
+    # Resolve image paths from the Path column
+    df["image_path"] = df["Path"].apply(
+        lambda p: str(data_dir / p)
+    )
 
-    # Resolve image paths (try common extensions)
-    def _resolve(image_id: str):
-        for ext in (".jpg", ".jpeg", ".png", ".JPG", ".JPEG"):
-            p = img_dir / f"{image_id}{ext}"
-            if p.exists():
-                return str(p)
-        return None
+    # GTSRB ClassId is already the integer label
+    df["label"] = df["ClassId"].astype(int)
 
-    df["image_path"] = df["image"].apply(_resolve)
-    missing = df["image_path"].isna().sum()
-    if missing:
-        print(f"[WARNING] {missing} images not found on disk -- dropping them.")
-        df = df.dropna(subset=["image_path"])
+    # Keep an image identifier for compatibility with the existing code
+    df["image"] = df["Path"].apply(
+        lambda p: Path(p).stem
+    )
 
-    return df.reset_index(drop=True)
+    # Verify that referenced images exist
+    missing = df[~df["image_path"].map(lambda p: Path(p).exists())]
+
+    if not missing.empty:
+        raise FileNotFoundError(
+            f"{len(missing)} GTSRB images referenced by Train.csv were not found."
+        )
+
+    return df[["image", "image_path", "label"]]
 
 
 # --- Training Helpers ---------------------------------------------------------
@@ -187,10 +183,15 @@ def validate(model, loader, criterion, device):
 
 def parse_args():
     p = argparse.ArgumentParser(
-        description="Train ConvNeXt-Base on ISIC 2019",
+        description="Train MobileNetV3-Small on GTSRB",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    p.add_argument("--data_dir",     type=str,   default="data/isic2019", help="ISIC 2019 dataset root")
+    p.add_argument(
+    "--data_dir",
+    type=str,
+    default="data/gtsrb",
+    help="GTSRB dataset root",
+)
     p.add_argument("--epochs",       type=int,   default=30,              help="Number of training epochs")
     p.add_argument("--batch_size",   type=int,   default=32,              help="Mini-batch size")
     p.add_argument("--lr",           type=float, default=1e-4,            help="AdamW initial learning rate")
@@ -219,7 +220,7 @@ def main():
     # -- Data ------------------------------------------------------------------
     data_dir = Path(args.data_dir)
     print(f"\n[INFO] Loading dataset from: {data_dir}")
-    df = load_isic_dataframe(data_dir)
+    df = load_gtsrb_dataframe(data_dir)
     print(f"[INFO] Total images: {len(df)}")
 
     class_counts = df["label"].value_counts().sort_index()
@@ -247,10 +248,10 @@ def main():
     )
     print(f"[INFO] Split CSVs saved -> {CHECKPOINT_DIR}")
 
-    train_ds = ISICDataset(train_df["image_path"].tolist(),
+    train_ds = GTSRBDataset(train_df["image_path"].tolist(),
                            train_df["label"].tolist(),
                            transform=get_train_transform())
-    val_ds   = ISICDataset(val_df["image_path"].tolist(),
+    val_ds   = GTSRBDataset(val_df["image_path"].tolist(),
                            val_df["label"].tolist(),
                            transform=get_val_transform())
 
@@ -263,7 +264,7 @@ def main():
 
     # -- Model -----------------------------------------------------------------
     model = build_model(pretrained=True).to(device)
-    print("\n[INFO] ConvNeXt-Base built (ImageNet pretrained)")
+    print("\n[INFO] MobileNetV3-Small built (ImageNet pretrained)")
 
     start_epoch   = 1
     best_val_acc  = 0.0
@@ -290,7 +291,7 @@ def main():
     # -- Training Loop ---------------------------------------------------------
     log = []
     print(f"\n{'='*62}")
-    print(f"  Training ConvNeXt-Base for {args.epochs} epochs")
+    print(f"  Training MobileNetV3-Small for {args.epochs} epochs")
     print(f"{'='*62}\n")
 
     for epoch in range(start_epoch, args.epochs + 1):

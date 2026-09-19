@@ -6,7 +6,7 @@ import sys
 sys.path.insert(0, ".")
 import time
 from PIL import Image
-from src.models.convnext_adapter import ConvNeXtAdapter
+from src.models.mobilenet_adapter import MobileNetAdapter
 from src.models.dummy_model import DummyVisionModel
 from src.circuit_breaker import MetamorphicCircuitBreaker, CircuitBreakerConfig
 from src.gradcam import make_comparison_figure, overlay_heatmap_on_image
@@ -18,7 +18,7 @@ print("=" * 60)
 
 # This is the scenario that caused the crash:
 # GradCAM hooks are registered, then predict() is called under no_grad().
-model = ConvNeXtAdapter()
+model = MobileNetAdapter()
 # Trigger GradCAM hook registration (lazy init inside explain)
 _ = model.explain(Image.new("RGB",(224,224)), target_class=0)
 print("  GradCAM hooks registered.")
