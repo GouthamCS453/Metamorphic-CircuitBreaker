@@ -35,6 +35,7 @@ function App() {
   const [busy, setBusy] = useState(false);
   const [online, setOnline] = useState(false);
   const [tab, setTab] = useState("live");
+  const [countdown, setCountdown] = useState(0);
 
   useEffect(() => {
     const ws = new WebSocket(WS);
@@ -110,6 +111,21 @@ function App() {
     warn: Number(config.theta_warn ?? 0.25),
     trip: Number(config.theta_trip ?? 0.55),
   };
+
+  useEffect(() => {
+    if (fallback.action !== "TAKEOVER_REQUESTED" || fallback.acknowledged) {
+      setCountdown(Number(fallback.countdown_s || 0));
+      return;
+    }
+    setCountdown(Number(fallback.countdown_s || 0));
+    const timer = setInterval(() => {
+      setCountdown((value) => {
+        const next = Math.max(0, value - 0.1);
+        return Number(next.toFixed(1));
+      });
+    }, 100);
+    return () => clearInterval(timer);
+  }, [fallback.action, fallback.acknowledged, fallback.countdown_s]);
 
   const connectionText = useMemo(
     () => (online ? "LIVE INFERENCE ONLINE" : "BACKEND OFFLINE"),
@@ -331,7 +347,7 @@ function App() {
             <div className="card">
               <label>DRIVER STATUS</label>
               <h2>{fallback.driver_present ? "Driver Present" : "Driver Absent"}</h2>
-              <p className="muted">Driver availability is provided by the test operator and is not inferred by the perception model.</p>
+              <p className="muted">Driver availability is provided by the test operator and is not inferred by the perception model. If no driver is available, the system selects a safe pull-over immediately.</p>
               <div className="occupancy"><span className={fallback.driver_present ? "on" : ""}>DRIVER PRESENT</span><span className={!fallback.driver_present ? "on" : ""}>DRIVER ABSENT</span></div>
             </div>
             <div className="card">
@@ -340,7 +356,7 @@ function App() {
               {fallback.action === "TAKEOVER_REQUESTED" && !fallback.acknowledged && (
                 <button className="takeover" onClick={acknowledge}>Confirm Driver Takeover</button>
               )}
-              {fallback.action === "TAKEOVER_REQUESTED" && !fallback.acknowledged && <div className="countdown">{Number(fallback.countdown_s).toFixed(1)}<small>s</small></div>}
+              {fallback.action === "TAKEOVER_REQUESTED" && !fallback.acknowledged && <div className="countdown">{countdown.toFixed(1)}<small>s remaining</small></div>}
               <p className="notice">Prototype only · Safe pull-over is a simulated safety response. No physical vehicle controls are connected.</p>
             </div>
           </div>
