@@ -1,6 +1,6 @@
 {
   "preset_id": "preset_half_open_warning",
-  "name": "\ud83d\udfe1 Systematic Geometric Fragility (3 Mild Flips)",
+  "name": "Systematic Geometric Fragility (3 Mild Flips)",
   "expected_state": "HALF_OPEN",
   "cbi_ref": "0.3738",
   "flips_ref": "3 / 22",

@@ -1,6 +1,6 @@
 {
   "preset_id": "preset_stable_nevus",
-  "name": "\ud83d\udfe2 Rock-Solid Lesion (0 Flips)",
+  "name": "Rock-Solid Lesion (0 Flips)",
   "expected_state": "CLOSED",
   "cbi_ref": "0.0156",
   "flips_ref": "0 / 22",

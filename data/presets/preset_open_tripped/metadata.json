@@ -1,6 +1,6 @@
 {
   "preset_id": "preset_open_tripped",
-  "name": "\ud83d\udd34 Multi-Family Collapse (12 Flips - Tripped!)",
+  "name": "Multi-Family Collapse (12 Flips - Tripped!)",
   "expected_state": "OPEN",
   "cbi_ref": "0.7183",
   "flips_ref": "12 / 22",
