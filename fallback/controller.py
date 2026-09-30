@@ -77,6 +77,11 @@ class FallbackController:
             )
 
         if state_value == "HALF_OPEN":
+            if not driver_present:
+                return self._safe_pull_over(
+                    state_value, driver_present,
+                    "Circuit breaker is HALF_OPEN and no driver is present."
+                )
             return self._request_or_escalate(
                 state_value, driver_present, current,
                 "Circuit breaker is HALF_OPEN; driver takeover is requested."
