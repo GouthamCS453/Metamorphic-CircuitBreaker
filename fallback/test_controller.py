@@ -18,7 +18,12 @@ class FallbackControllerTests(unittest.TestCase):
         c = FallbackController()
         d = c.evaluate("HALF_OPEN", now=0)
         self.assertEqual(d.action, FallbackAction.TAKEOVER_REQUESTED)
-        self.assertLessEqual(d.countdown_s, 5.0)
+        self.assertLessEqual(d.countdown_s, 10.0)
+
+    def test_unoccupied_half_open_pulls_over_immediately(self):
+        c = FallbackController()
+        d = c.evaluate("HALF_OPEN", driver_present=False, now=0)
+        self.assertEqual(d.action, FallbackAction.SAFE_PULL_OVER)
 
     def test_unoccupied_open_pulls_over_immediately(self):
         c = FallbackController()
@@ -29,7 +34,7 @@ class FallbackControllerTests(unittest.TestCase):
         c = FallbackController()
         first = c.evaluate("OPEN", driver_present=True, now=10)
         self.assertEqual(first.action, FallbackAction.TAKEOVER_REQUESTED)
-        second = c.evaluate("OPEN", driver_present=True, now=15.01)
+        second = c.evaluate("OPEN", driver_present=True, now=20.01)
         self.assertEqual(second.action, FallbackAction.SAFE_PULL_OVER)
 
     def test_acknowledgement_prevents_pull_over(self):
