@@ -118,9 +118,17 @@ function App() {
       return;
     }
     setCountdown(Number(fallback.countdown_s || 0));
-    const timer = setInterval(() => {
+    const timer = setInterval(async () => {
       setCountdown((value) => {
         const next = Math.max(0, value - 0.1);
+        if (next <= 0) {
+          fetch(\`${API}/api/takeover/status\`)
+            .then((response) => response.ok ? response.json() : null)
+            .then((data) => {
+              if (data) setResult((current) => ({ ...current, fallback: data }));
+            })
+            .catch(() => {});
+        }
         return Number(next.toFixed(1));
       });
     }, 100);
