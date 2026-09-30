@@ -126,8 +126,8 @@ function App() {
       <header className="header">
         <div>
           <div className="live-badge"><i /> {connectionText}</div>
-          <h1>Metamorphic Circuit Breaker Studio</h1>
-          <p>Runtime transform-brittleness detection and safety fallback for vision models.</p>
+          <h1>Metamorphic Circuit Breaker</h1>
+          <p>Runtime robustness monitoring for vision-based perception.</p>
         </div>
         <div className="header-meta">
           <span>GTSRB</span>
@@ -139,7 +139,7 @@ function App() {
       <nav className="tabs">
         <button className={tab === "live" ? "active" : ""} onClick={() => setTab("live")}>Live Circuit Breaker</button>
         <button className={tab === "diagnostics" ? "active" : ""} onClick={() => setTab("diagnostics")}>Diagnostics</button>
-        <button className={tab === "fallback" ? "active" : ""} onClick={() => setTab("fallback")}>Safety Fallback</button>
+        <button className={tab === "fallback" ? "active" : ""} onClick={() => setTab("fallback")}>Safety Response</button>
       </nav>
 
       {tab === "live" && (
@@ -329,19 +329,19 @@ function App() {
           </div>
           <div className="two-col">
             <div className="card">
-              <label>DRIVER / OCCUPANCY</label>
+              <label>DRIVER STATUS</label>
               <h2>{fallback.driver_present ? "Driver Present" : "Driver Absent"}</h2>
-              <p className="muted">Occupancy is supplied by the caller; it is not inferred by the ML model.</p>
+              <p className="muted">Driver availability is provided by the test operator and is not inferred by the perception model.</p>
               <div className="occupancy"><span className={fallback.driver_present ? "on" : ""}>DRIVER PRESENT</span><span className={!fallback.driver_present ? "on" : ""}>DRIVER ABSENT</span></div>
             </div>
             <div className="card">
-              <label>TAKEOVER STATUS</label>
-              <h2>{fallback.acknowledged ? "Acknowledged" : fallback.action === "TAKEOVER_REQUESTED" ? "Awaiting acknowledgement" : "Not requested"}</h2>
+              <label>DRIVER TAKEOVER</label>
+              <h2>{fallback.acknowledged ? "Takeover acknowledged" : fallback.action === "TAKEOVER_REQUESTED" ? "Awaiting driver response" : fallback.action === "SAFE_PULL_OVER" ? "Safe pull-over selected" : "No takeover requested"}</h2>
               {fallback.action === "TAKEOVER_REQUESTED" && !fallback.acknowledged && (
-                <button className="takeover" onClick={acknowledge}>Acknowledge Driver Takeover</button>
+                <button className="takeover" onClick={acknowledge}>Confirm Driver Takeover</button>
               )}
               {fallback.action === "TAKEOVER_REQUESTED" && !fallback.acknowledged && <div className="countdown">{Number(fallback.countdown_s).toFixed(1)}<small>s</small></div>}
-              <p className="notice">SAFE_PULL_OVER is a simulated safety decision in this prototype; no physical vehicle actuator is controlled.</p>
+              <p className="notice">Prototype only · Safe pull-over is a simulated safety response. No physical vehicle controls are connected.</p>
             </div>
           </div>
         </section>
