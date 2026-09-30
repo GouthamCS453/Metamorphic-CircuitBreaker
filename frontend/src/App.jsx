@@ -226,6 +226,34 @@ function App() {
 
       {tab === "diagnostics" && (
         <section className="diagnostics">
+          <div className="card gradcam-section">
+            <div className="card-title">
+              <div><label>MODEL EXPLAINABILITY</label><h2>Grad-CAM Attention & Comparison</h2></div>
+              <span className="muted">{result.gradcam?.comparisons?.length || 0} flip comparison(s)</span>
+            </div>
+            {result.gradcam ? (
+              <>
+                <p className="diagnostic-copy">Grad-CAM highlights image regions contributing to the selected prediction. Comparisons use the actual transformed images that triggered prediction flips.</p>
+                <div className="gradcam-grid">
+                  <div className="cam-card baseline">
+                    <div className="cam-label"><span>BASELINE</span><b>{result.gradcam.baseline.label}</b></div>
+                    <div className="cam-images"><img src={result.gradcam.baseline.image} alt="Baseline input" /><img src={result.gradcam.baseline.heatmap} alt="Baseline Grad-CAM heatmap" /></div>
+                    <div className="cam-caption">Original image → model attention</div>
+                    <strong>{(Number(result.gradcam.baseline.confidence) * 100).toFixed(1)}% confidence</strong>
+                  </div>
+                  {result.gradcam.comparisons.map((item) => (
+                    <div className={`cam-card ${item.prediction_changed ? "changed" : ""}`} key={item.test_id}>
+                      <div className="cam-label"><span>{item.test_id} · {item.test_name}</span><b>{item.label}</b></div>
+                      <div className="cam-images"><img src={item.image} alt={`${item.test_name} transformed image`} /><img src={item.heatmap} alt={`${item.test_name} Grad-CAM heatmap`} /></div>
+                      <div className="cam-caption">{item.prediction_changed ? "ATTENTION / PREDICTION SHIFT" : "ATTENTION COMPARISON"}</div>
+                      <strong>{(Number(item.confidence) * 100).toFixed(1)}% confidence</strong>
+                    </div>
+                  ))}
+                </div>
+                {result.gradcam.comparisons.length === 0 && <div className="cam-empty">No prediction flips required a comparison. The baseline Grad-CAM above shows where the model focused.</div>}
+              </>
+            ) : <div className="cam-empty">Run a live evaluation to generate the baseline Grad-CAM and comparison maps.</div>}
+          </div>
           <div className="card">
             <div className="card-title">
               <div><label>CBI ATTRIBUTION</label><h2>Composite Brittleness Index</h2></div>
