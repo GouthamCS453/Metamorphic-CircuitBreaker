@@ -56,25 +56,41 @@ async def evaluate(
     except Exception as exc:
         raise HTTPException(status_code=400, detail=f"Invalid image: {exc}") from exc
 
-    result = system.evaluate(
-        pil_image,
-        driver_present=driver_present,
-    )
+    result = system.evaluate(pil_image, driver_present=driver_present)
+    report = result.report
+
+    test_results = [
+        {
+            "id": r.test_id,
+            "transform": r.test_name,
+            "family": r.family,
+            "severity": r.severity,
+            "weight": r.weight,
+            "prediction": r.pred_label,
+            "confidence": r.confidence,
+            "flipped": r.flipped,
+        }
+        for r in report.test_results
+    ]
 
     payload = {
         "prediction": {
-            "index": result.report.baseline_idx,
-            "label": result.report.baseline_label,
-            "confidence": result.report.baseline_confidence,
+            "index": report.baseline_idx,
+            "label": report.baseline_label,
+            "confidence": report.baseline_confidence,
         },
         "circuit_breaker": {
-            "state": result.report.state.value,
-            "action": result.report.action,
-            "cbi": result.report.cbi,
-            "peak_family": result.report.peak_family,
-            "peak_family_score": result.report.peak_family_score,
-            "cross_family_spread": result.report.cross_family_spread,
-            "compromised_families": result.report.compromised_families,
+            "state": report.state.value,
+            "action": report.action,
+            "cbi": report.cbi,
+            "peak_family": report.peak_family,
+            "peak_family_score": report.peak_family_score,
+            "cross_family_spread": report.cross_family_spread,
+            "compromised_families": report.compromised_families,
+            "family_instability": report.family_instability,
+            "type_scores": report.type_scores,
+            "test_results": test_results,
+            "details": report.details,
         },
         "fallback": decision_to_dict(result.fallback),
     }
