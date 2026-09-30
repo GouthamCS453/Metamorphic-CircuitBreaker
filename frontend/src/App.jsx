@@ -122,7 +122,7 @@ function App() {
       setCountdown((value) => {
         const next = Math.max(0, value - 0.1);
         if (next <= 0) {
-          fetch(\`${API}/api/takeover/status\`)
+          fetch(`${API}/api/takeover/status`)
             .then((response) => response.ok ? response.json() : null)
             .then((data) => {
               if (data) setResult((current) => ({ ...current, fallback: data }));
