@@ -5,9 +5,9 @@ CLOSED/HALF_OPEN/OPEN. This module only consumes the detected state.
 
 Policy:
 - CLOSED: normal operation; no fallback action.
-- HALF_OPEN: request immediate driver takeover and start a 5-second window.
+- HALF_OPEN: request driver takeover when a driver is present and start a 10-second window.
 - OPEN: request driver takeover when a driver is present; otherwise, or after
-  the takeover window expires, enter the minimum-risk maneuver.
+  the 10-second takeover window expires, enter the minimum-risk maneuver.
 - Driver occupancy is supplied by the caller; it is never inferred from ML.
 """
 
@@ -27,7 +27,7 @@ class FallbackAction(str, Enum):
 
 @dataclass(frozen=True)
 class FallbackConfig:
-    takeover_timeout_s: float = 5.0
+    takeover_timeout_s: float = 10.0
 
 
 @dataclass
@@ -118,7 +118,7 @@ class FallbackController:
         if remaining <= 0:
             return self._safe_pull_over(
                 state, driver_present,
-                reason + " Takeover was not acknowledged within 5 seconds."
+                reason + " Takeover was not acknowledged within 10 seconds."
             )
 
         return FallbackDecision(
