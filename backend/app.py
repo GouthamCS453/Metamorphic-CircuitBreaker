@@ -17,6 +17,8 @@ app.add_middleware(CORSMiddleware, allow_origins=["http://localhost:5173","http:
 model = MobileNetAdapter()
 existing_cb = MetamorphicCircuitBreaker(model)
 system = CircuitBreakerWithFallback(existing_cb)
+_last_state = "CLOSED"
+_last_driver_present = True
 _connections: Set[WebSocket] = set()
 
 def _image_data_url(pil_image: Image.Image) -> str:
@@ -46,6 +48,9 @@ async def evaluate(image: UploadFile = File(...), driver_present: bool = True) -
         raise HTTPException(status_code=400, detail=f"Invalid image: {exc}") from exc
 
     report, gradcam_data = existing_cb.evaluate_with_gradcam(pil_image, max_gradcam_flips=3)
+    global _last_state, _last_driver_present
+    _last_state = report.state.value
+    _last_driver_present = driver_present
     decision = system.fallback.evaluate(report.state, driver_present=driver_present)
 
     test_results = [{
@@ -82,6 +87,17 @@ async def evaluate(image: UploadFile = File(...), driver_present: bool = True) -
         "gradcam":gradcam,
     }
     await _broadcast(payload)
+    return payload
+
+@app.get("/api/takeover/status")
+async def takeover_status() -> dict:
+    """Return the current fallback decision so the UI can complete the timeout."""
+    decision = system.fallback.evaluate(
+        _last_state,
+        driver_present=_last_driver_present,
+    )
+    payload = decision_to_dict(decision)
+    await _broadcast({"fallback": payload})
     return payload
 
 @app.post("/api/takeover/ack")
