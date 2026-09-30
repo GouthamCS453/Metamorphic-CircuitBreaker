@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 const API = "http://127.0.0.1:8000";
 const WS = "ws://127.0.0.1:8000/ws/fallback";
 
-const initialResult = {
+const empty = {
   prediction: null,
   circuit_breaker: null,
   fallback: {
@@ -11,97 +11,66 @@ const initialResult = {
     state: "CLOSED",
     driver_present: true,
     acknowledged: false,
-    countdown_s: null,
-    reason: "Waiting for an image.",
+    countdown_s: 0,
+    reason: "Upload a traffic-sign image to begin live analysis.",
     critical: false,
   },
 };
 
-const stateCopy = {
-  CLOSED: {
-    title: "SYSTEM STABLE",
-    detail: "Autonomous operation permitted",
-    tone: "stable",
-  },
-  HALF_OPEN: {
-    title: "TAKEOVER READY",
-    detail: "Monitoring degraded prediction stability",
-    tone: "warning",
-  },
-  OPEN: {
-    title: "AUTOMATED CONTROL BLOCKED",
-    detail: "Safety fallback active",
-    tone: "critical",
-  },
+const familyNames = {
+  geometric: "Geometric",
+  photometric: "Photometric",
+  sensor_noise: "Sensor / Noise",
 };
 
-function clampPercent(value) {
-  return Math.min(100, Math.max(0, Number(value) * 100));
-}
-
-function StatusDot({ tone = "neutral" }) {
-  return <span className={`status-dot ${tone}`} aria-hidden="true" />;
+function toneFor(state) {
+  return state === "OPEN" ? "open" : state === "HALF_OPEN" ? "half" : "closed";
 }
 
 function App() {
   const [file, setFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState("");
+  const [preview, setPreview] = useState("");
+  const [result, setResult] = useState(empty);
   const [driverPresent, setDriverPresent] = useState(true);
-  const [result, setResult] = useState(initialResult);
   const [busy, setBusy] = useState(false);
-  const [connection, setConnection] = useState("connecting");
+  const [online, setOnline] = useState(false);
+  const [tab, setTab] = useState("live");
 
   useEffect(() => {
     const ws = new WebSocket(WS);
-
-    ws.onopen = () => setConnection("connected");
-    ws.onclose = () => setConnection("disconnected");
-    ws.onerror = () => setConnection("error");
-
+    ws.onopen = () => setOnline(true);
+    ws.onclose = () => setOnline(false);
+    ws.onerror = () => setOnline(false);
     ws.onmessage = (event) => {
-      try {
-        setResult(JSON.parse(event.data));
-      } catch {
-        // Ignore non-JSON WebSocket messages.
-      }
+      try { setResult(JSON.parse(event.data)); } catch {}
     };
-
     return () => ws.close();
   }, []);
 
   useEffect(() => {
     if (!file) {
-      setPreviewUrl("");
-      return undefined;
+      setPreview("");
+      return;
     }
-
     const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
+    setPreview(url);
     return () => URL.revokeObjectURL(url);
   }, [file]);
 
   async function evaluate() {
     if (!file) return;
-
     setBusy(true);
     try {
       const form = new FormData();
       form.append("image", file);
-
       const response = await fetch(
         `${API}/api/evaluate?driver_present=${driverPresent}`,
-        {
-          method: "POST",
-          body: form,
-        }
+        { method: "POST", body: form }
       );
-
       const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.detail || "Evaluation failed.");
-      }
-
+      if (!response.ok) throw new Error(data.detail || "Evaluation failed.");
       setResult(data);
+      setTab("live");
     } catch (error) {
       setResult((current) => ({
         ...current,
@@ -118,372 +87,243 @@ function App() {
   }
 
   async function acknowledge() {
-    try {
-      const response = await fetch(`${API}/api/takeover/ack`, {
-        method: "POST",
-      });
-      if (!response.ok) throw new Error("Acknowledgement failed.");
-
-      setResult((current) => ({
-        ...current,
-        fallback: {
-          ...current.fallback,
-          acknowledged: true,
-          action: "TAKEOVER_REQUESTED",
-        },
-      }));
-    } catch (error) {
-      setResult((current) => ({
-        ...current,
-        fallback: {
-          ...current.fallback,
-          critical: true,
-          reason: error.message,
-        },
-      }));
-    }
+    const response = await fetch(`${API}/api/takeover/ack`, { method: "POST" });
+    if (!response.ok) return;
+    setResult((current) => ({
+      ...current,
+      fallback: { ...current.fallback, acknowledged: true },
+    }));
   }
 
-  function handleFileChange(event) {
-    setFile(event.target.files?.[0] || null);
-  }
-
-  function handleDrop(event) {
-    event.preventDefault();
-    const dropped = event.dataTransfer.files?.[0];
-    if (dropped?.type.startsWith("image/")) setFile(dropped);
-  }
-
-  const fallback = result.fallback || initialResult.fallback;
   const cb = result.circuit_breaker;
   const prediction = result.prediction;
+  const fallback = result.fallback || empty.fallback;
   const state = cb?.state || fallback.state || "CLOSED";
-  const stateInfo = stateCopy[state] || stateCopy.CLOSED;
-  const action = fallback.action || "NORMAL";
-
-  const confidence = prediction ? clampPercent(prediction.confidence) : 0;
+  const tone = toneFor(state);
+  const tests = cb?.test_results || [];
+  const flips = tests.filter((x) => x.flipped);
+  const family = cb?.family_instability || {};
+  const confidence = prediction ? Number(prediction.confidence) * 100 : 0;
   const cbi = cb ? Number(cb.cbi) : null;
-  const cbiPercent = cbi == null ? 0 : Math.min(100, Math.max(0, cbi * 100));
+  const config = cb?.details?.config || {};
+  const thresholds = {
+    warn: Number(config.theta_warn ?? 0.25),
+    trip: Number(config.theta_trip ?? 0.55),
+  };
 
-  const modeLabel = fallback.driver_present
-    ? "DRIVER ASSIST / READY"
-    : "AUTONOMOUS / DRIVERLESS";
+  const connectionText = useMemo(
+    () => (online ? "LIVE INFERENCE ONLINE" : "BACKEND OFFLINE"),
+    [online]
+  );
 
-  const fallbackClass = action.toLowerCase();
-
-  const connectionLabel = useMemo(() => {
-    if (connection === "connected") return "SYSTEM ONLINE";
-    if (connection === "connecting") return "CONNECTING";
-    if (connection === "error") return "API ERROR";
-    return "SYSTEM OFFLINE";
-  }, [connection]);
+  function chooseFile(e) {
+    const next = e.target.files?.[0];
+    if (next) setFile(next);
+  }
 
   return (
-    <main className="app-shell">
-      <div className="dashboard">
-        <header className="topbar">
-          <div className="brand">
-            <div className="brand-mark" aria-hidden="true">
-              <span />
-              <span />
-              <span />
-            </div>
-            <div>
-              <p className="eyebrow">VEHICLE SAFETY SYSTEM</p>
-              <h1>Metamorphic Circuit Breaker</h1>
-              <p className="subtitle">
-                Autonomous perception &amp; safety monitoring console
-              </p>
-            </div>
-          </div>
+    <div className="app">
+      <header className="header">
+        <div>
+          <div className="live-badge"><i /> {connectionText}</div>
+          <h1>Metamorphic Circuit Breaker Studio</h1>
+          <p>Runtime transform-brittleness detection and safety fallback for vision models.</p>
+        </div>
+        <div className="header-meta">
+          <span>GTSRB</span>
+          <span>MobileNetV3-Small</span>
+          <span>43 classes</span>
+        </div>
+      </header>
 
-          <div className="topbar-meta">
-            <div className={`online-pill ${connection}`}>
-              <StatusDot tone={connection === "connected" ? "online" : "neutral"} />
-              <span>{connectionLabel}</span>
+      <nav className="tabs">
+        <button className={tab === "live" ? "active" : ""} onClick={() => setTab("live")}>Live Circuit Breaker</button>
+        <button className={tab === "diagnostics" ? "active" : ""} onClick={() => setTab("diagnostics")}>Diagnostics</button>
+        <button className={tab === "fallback" ? "active" : ""} onClick={() => setTab("fallback")}>Safety Fallback</button>
+      </nav>
+
+      {tab === "live" && (
+        <>
+          <section className={`state-banner ${tone}`}>
+            <strong>
+              {state === "CLOSED" && "CLOSED | AUTO-APPROVED"}
+              {state === "HALF_OPEN" && "HALF-OPEN | MONITOR / WARNING"}
+              {state === "OPEN" && "OPEN | SAFETY INTERCEPT | PREDICTION BLOCKED"}
+            </strong>
+            <span>CBI = {cbi == null ? "—" : cbi.toFixed(4)} &nbsp;|&nbsp; {(cb?.action || "WAITING").replaceAll("_", " ")}</span>
+          </section>
+
+          <section className="metrics">
+            <div className="metric-card">
+              <label>BASELINE PREDICTION</label>
+              <strong>{prediction?.label || "—"}</strong>
+              <small>{prediction ? `Class ${prediction.index}` : "Awaiting image"}</small>
             </div>
-            <span className="demo-badge">RESEARCH PROTOTYPE</span>
-          </div>
-        </header>
+            <div className="metric-card">
+              <label>CONFIDENCE (c₀)</label>
+              <strong>{prediction ? `${confidence.toFixed(1)}%` : "—"}</strong>
+              <div className="bar"><b style={{width: `${confidence}%`}} /></div>
+            </div>
+            <div className="metric-card">
+              <label>PREDICTION FLIPS</label>
+              <strong>{tests.length ? `${flips.length} / ${tests.length}` : "—"}</strong>
+              <small>{flips.length ? "Instability detected" : "No tests executed"}</small>
+            </div>
+            <div className="metric-card">
+              <label>CBI SCORE</label>
+              <strong>{cbi == null ? "—" : cbi.toFixed(4)}</strong>
+              <small>Warn {thresholds.warn.toFixed(2)} · Trip {thresholds.trip.toFixed(2)}</small>
+            </div>
+          </section>
 
-        <section className={`alert-banner ${stateInfo.tone} ${fallbackClass}`}>
-          <div className="alert-icon" aria-hidden="true">
-            {state === "OPEN" ? "!" : state === "HALF_OPEN" ? "!" : "✓"}
-          </div>
-          <div className="alert-copy">
-            <span className="micro-label">SAFETY STATE</span>
-            <strong>{stateInfo.title}</strong>
-            <span>{stateInfo.detail}</span>
-          </div>
-          <div className="alert-state">
-            <span>{state}</span>
-            <small>{cb ? `CBI ${cbi.toFixed(4)}` : "CBI —"}</small>
-          </div>
-        </section>
-
-        <section className="overview-grid">
-          <article className="panel vehicle-panel">
-            <div className="panel-heading">
-              <div>
-                <span className="micro-label">VEHICLE STATUS</span>
-                <h2>Perception Monitor</h2>
+          <section className="source-grid">
+            <div className="card">
+              <div className="card-title">
+                <div><label>INPUT IMAGE</label><h2>Traffic Sign</h2></div>
+                <span className="muted">JPG / PNG</span>
               </div>
-              <StatusDot tone={stateInfo.tone} />
-            </div>
-
-            <div className="vehicle-visual" aria-hidden="true">
-              <div className="vehicle-ring ring-one" />
-              <div className="vehicle-ring ring-two" />
-              <div className="vehicle-outline">
-                <span className="wheel wheel-left" />
-                <span className="wheel wheel-right" />
-                <span className="vehicle-window" />
-              </div>
-            </div>
-
-            <div className="vehicle-details">
-              <div>
-                <span className="micro-label">OPERATING MODE</span>
-                <strong>{modeLabel}</strong>
-              </div>
-              <div>
-                <span className="micro-label">DRIVER</span>
-                <strong className={fallback.driver_present ? "ok-text" : "warn-text"}>
-                  {fallback.driver_present ? "PRESENT" : "ABSENT"}
-                </strong>
-              </div>
-            </div>
-          </article>
-
-          <article className="panel safety-panel">
-            <div className="panel-heading">
-              <div>
-                <span className="micro-label">CIRCUIT BREAKER</span>
-                <h2>Safety State</h2>
-              </div>
-              <span className={`state-chip ${stateInfo.tone}`}>{state}</span>
-            </div>
-
-            <div className="safety-state">
-              <strong>{stateInfo.title}</strong>
-              <span>{cb?.action || "NORMAL OPERATION"}</span>
-            </div>
-
-            <div className="metric">
-              <div className="metric-label">
-                <span>CIRCUIT BREAKER INDEX</span>
-                <strong>{cbi == null ? "—" : cbi.toFixed(4)}</strong>
-              </div>
-              <div className="meter cbi-meter">
-                <span style={{ width: `${cbiPercent}%` }} />
-              </div>
-              <div className="meter-scale">
-                <span>LOW</span><span>HIGH</span>
-              </div>
-            </div>
-          </article>
-        </section>
-
-        <section className="section-heading">
-          <div>
-            <span className="micro-label">PERCEPTION</span>
-            <h2>Camera &amp; Model Analysis</h2>
-          </div>
-          <span className="section-note">GTSRB / MobileNetV3-Small</span>
-        </section>
-
-        <section className="perception-grid">
-          <article className="panel camera-panel">
-            <div className="panel-heading">
-              <div>
-                <span className="micro-label">CAM-01</span>
-                <h2>Camera Input</h2>
-              </div>
-              <span className="frame-status">
-                <StatusDot tone={previewUrl ? "online" : "neutral"} />
-                {previewUrl ? "FRAME READY" : "WAITING"}
-              </span>
-            </div>
-
-            <label
-              className={`dropzone ${previewUrl ? "has-image" : ""}`}
-              onDragOver={(event) => event.preventDefault()}
-              onDrop={handleDrop}
-            >
-              {previewUrl ? (
-                <>
-                  <img src={previewUrl} alt="Selected traffic sign" />
-                  <div className="camera-overlay top-left">CAM-01</div>
-                  <div className="camera-overlay top-right">FRAME ANALYSIS</div>
-                  <div className="camera-overlay bottom-left">
-                    {file?.name}
+              <label className={`uploader ${preview ? "filled" : ""}`}>
+                {preview ? <img src={preview} alt="Selected traffic sign" /> : (
+                  <div>
+                    <b>Choose a traffic-sign image</b>
+                    <span>MobileNetV3-Small will evaluate the baseline and metamorphic variants.</span>
                   </div>
-                  <div className="scan-line" />
-                </>
-              ) : (
-                <div className="drop-content">
-                  <div className="camera-icon" aria-hidden="true">
-                    ◫
-                  </div>
-                  <strong>DROP CAMERA IMAGE</strong>
-                  <span>or select a traffic-sign image</span>
-                  <em>JPG / PNG · manual evaluation</em>
-                </div>
-              )}
-              <input type="file" accept="image/*" onChange={handleFileChange} />
-            </label>
-          </article>
-
-          <article className="panel model-panel">
-            <div className="panel-heading">
-              <div>
-                <span className="micro-label">MODEL OUTPUT</span>
-                <h2>Perception Result</h2>
+                )}
+                <input type="file" accept="image/*" onChange={chooseFile} />
+              </label>
+              <div className="driver-row">
+                <label>Driver status</label>
+                <select value={driverPresent ? "present" : "absent"} onChange={(e) => setDriverPresent(e.target.value === "present")}>
+                  <option value="present">Driver present</option>
+                  <option value="absent">Driver absent / autonomous</option>
+                </select>
               </div>
-              <span className="model-badge">43 CLASSES</span>
+              <button className="primary" disabled={!file || busy} onClick={evaluate}>
+                {busy ? "Running 22-test analysis…" : "Run Live Metamorphic Circuit Breaker"}
+              </button>
             </div>
 
-            <div className="prediction">
-              <span className="micro-label">PREDICTED LABEL</span>
-              <strong>{prediction?.label ?? "Awaiting frame"}</strong>
-              <span className="prediction-class">
-                {prediction ? `Class ${prediction.index}` : "No evaluation yet"}
-              </span>
-            </div>
-
-            <div className="metric confidence-metric">
-              <div className="metric-label">
-                <span>CONFIDENCE</span>
-                <strong>{prediction ? `${confidence.toFixed(1)}%` : "—"}</strong>
+            <div className="card">
+              <div className="card-title">
+                <div><label>DIAGNOSTIC SUMMARY</label><h2>Runtime Analysis</h2></div>
+                <span className={`state-pill ${tone}`}>{state}</span>
               </div>
-              <div className="meter confidence-meter">
-                <span style={{ width: `${confidence}%` }} />
+              <div className="summary-list">
+                <div><span>Peak unstable family</span><b>{familyNames[cb?.peak_family] || cb?.peak_family || "—"}</b></div>
+                <div><span>Peak family IRₖ</span><b>{cb ? Number(cb.peak_family_score).toFixed(4) : "—"}</b></div>
+                <div><span>Cross-family spread</span><b>{cb ? Number(cb.cross_family_spread).toFixed(4) : "—"}</b></div>
+                <div><span>Compromised families</span><b>{cb?.compromised_families?.length ?? "—"}</b></div>
+              </div>
+              <div className="decision-box">
+                <label>CURRENT ACTION</label>
+                <strong>{(cb?.action || "WAITING FOR ANALYSIS").replaceAll("_", " ")}</strong>
+                <span>{fallback.reason}</span>
               </div>
             </div>
+          </section>
+        </>
+      )}
 
-            <div className="analysis-row">
-              <span>Peak family</span>
-              <strong>{cb?.peak_family || "—"}</strong>
+      {tab === "diagnostics" && (
+        <section className="diagnostics">
+          <div className="card">
+            <div className="card-title">
+              <div><label>CBI ATTRIBUTION</label><h2>Composite Brittleness Index</h2></div>
+              <span className={`state-pill ${tone}`}>{state}</span>
             </div>
-            <div className="analysis-row">
-              <span>Cross-family spread</span>
-              <strong>
-                {cb?.cross_family_spread == null
-                  ? "—"
-                  : Number(cb.cross_family_spread).toFixed(4)}
-              </strong>
+            <div className="gauge">
+              <div className="gauge-track">
+                <span className="zone green" />
+                <span className="zone yellow" />
+                <span className="zone red" />
+                {cbi != null && <i style={{left: `${Math.min(cbi,1)*100}%`}} />}
+              </div>
+              <div className="gauge-labels"><span>0</span><span>theta_warn {thresholds.warn}</span><span>theta_trip {thresholds.trip}</span><span>1.0</span></div>
             </div>
-          </article>
-        </section>
-
-        <section className="panel metamorphic-panel">
-          <div className="panel-heading">
-            <div>
-              <span className="micro-label">METAMORPHIC SAFETY ANALYSIS</span>
-              <h2>Consistency Monitor</h2>
+            <div className="formula">
+              CBI(x) = α · max IRₖ(x) + β · CFS(x) + γ · (1 − c₀)
+              <br />
+              {cbi == null ? "Run an evaluation to populate the attribution." :
+                `Observed CBI = ${cbi.toFixed(4)}`}
             </div>
-            <span className="analysis-badge">
-              <StatusDot tone="online" /> ANALYSIS COMPLETED
-            </span>
           </div>
 
-          <div className="metamorphic-grid">
-            <div className="mr-item"><span>MR1</span><strong>Rotation</strong><em>Framework result available</em></div>
-            <div className="mr-item"><span>MR2</span><strong>Horizontal Flip</strong><em>Framework result available</em></div>
-            <div className="mr-item"><span>MR3</span><strong>Zoom</strong><em>Framework result available</em></div>
-            <div className="mr-item"><span>MR4</span><strong>Brightness / Contrast</strong><em>Framework result available</em></div>
-            <div className="mr-item"><span>MR5</span><strong>Gaussian Noise</strong><em>Framework result available</em></div>
-            <div className="mr-item"><span>MR6</span><strong>Gaussian Blur</strong><em>Framework result available</em></div>
-            <div className="mr-item"><span>MR7</span><strong>Sharpening</strong><em>Framework result available</em></div>
-            <div className="mr-item"><span>MR8</span><strong>Saturation</strong><em>Framework result available</em></div>
-          </div>
-          <p className="data-note">
-            Individual MR scores are not exposed by the current API, so this panel does not invent per-relation results.
-          </p>
-        </section>
-
-        <section className={`fallback-panel ${fallbackClass}`}>
-          <div className="fallback-header">
-            <div>
-              <span className="micro-label">FALLBACK CONTROL</span>
-              <h2>
-                {action === "SAFE_PULL_OVER"
-                  ? "Safety Fallback Active"
-                  : action === "TAKEOVER_REQUESTED"
-                    ? "Takeover Requested"
-                    : "Autonomous Operation"}
-              </h2>
+          <div className="two-col">
+            <div className="card">
+              <div className="card-title"><div><label>LEVEL 2</label><h2>Family Instability IRₖ</h2></div></div>
+              {Object.entries(family).length ? Object.entries(family).map(([key, value]) => (
+                <div className="family-row" key={key}>
+                  <span>{familyNames[key] || key}</span>
+                  <div className="mini-bar"><b style={{width: `${Number(value)*100}%`}} /></div>
+                  <strong>{Number(value).toFixed(3)}</strong>
+                </div>
+              )) : <p className="empty">No family results yet.</p>}
             </div>
-            <span className="action-chip">{action.replaceAll("_", " ")}</span>
+            <div className="card">
+              <div className="card-title"><div><label>LEVEL 1</label><h2>Transformation Scores</h2></div></div>
+              {Object.entries(cb?.type_scores || {}).length ? Object.entries(cb.type_scores).map(([key, value]) => (
+                <div className="family-row" key={key}>
+                  <span>{key}</span>
+                  <div className="mini-bar"><b style={{width: `${Number(value)*100}%`}} /></div>
+                  <strong>{Number(value).toFixed(3)}</strong>
+                </div>
+              )) : <p className="empty">No transformation scores yet.</p>}
+            </div>
           </div>
 
-          <div className="fallback-body">
-            <div className="fallback-copy">
-              <div className="fallback-status-line">
-                <StatusDot tone={fallback.critical ? "critical" : action === "TAKEOVER_REQUESTED" ? "warning" : "online"} />
-                <strong>{fallback.reason}</strong>
-              </div>
-
-              {fallback.countdown_s != null && !fallback.acknowledged && (
-                <div className="takeover-countdown">
-                  <span>TAKEOVER WINDOW</span>
-                  <strong>{Number(fallback.countdown_s).toFixed(1)}<small>s</small></strong>
-                </div>
-              )}
-
-              {fallback.acknowledged && (
-                <div className="acknowledged">
-                  <StatusDot tone="online" />
-                  Driver takeover acknowledged
-                </div>
-              )}
-            </div>
-
-            <div className="fallback-actions">
-              <div className="driver-toggle">
-                <span className={fallback.driver_present ? "selected" : ""}>
-                  <StatusDot tone={fallback.driver_present ? "online" : "neutral"} />
-                  DRIVER PRESENT
-                </span>
-                <span className={!fallback.driver_present ? "selected" : ""}>
-                  <StatusDot tone={!fallback.driver_present ? "warning" : "neutral"} />
-                  DRIVER ABSENT
-                </span>
-              </div>
-
-              {action === "TAKEOVER_REQUESTED" && !fallback.acknowledged && (
-                <button className="takeover-button" onClick={acknowledge}>
-                  ACKNOWLEDGE TAKEOVER
-                </button>
-              )}
-
-              {action === "SAFE_PULL_OVER" && (
-                <div className="simulation-notice">
-                  <span>SIMULATION EVENT</span>
-                  Safe pull-over is represented as a safety decision only.
-                </div>
-              )}
+          <div className="card">
+            <div className="card-title"><div><label>FULL MATRIX</label><h2>Metamorphic Test Results</h2></div><span>{tests.length} tests</span></div>
+            <div className="table-wrap">
+              <table>
+                <thead><tr><th>ID</th><th>Transform</th><th>Family</th><th>Severity</th><th>Weight</th><th>Prediction</th><th>Conf.</th><th>Result</th></tr></thead>
+                <tbody>
+                  {tests.map((t) => (
+                    <tr key={t.id}>
+                      <td>{t.id}</td><td>{t.transform}</td><td>{familyNames[t.family] || t.family}</td>
+                      <td>{t.severity}</td><td>{Number(t.weight).toFixed(1)}</td><td>{t.prediction}</td>
+                      <td>{(Number(t.confidence)*100).toFixed(1)}%</td>
+                      <td><span className={t.flipped ? "flip" : "stable"}>{t.flipped ? "FLIP" : "STABLE"}</span></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
+      )}
 
-        <section className="evaluation-bar">
-          <div>
-            <span className="micro-label">MANUAL EVALUATION</span>
-            <strong>{file ? file.name : "Select a camera image to begin"}</strong>
+      {tab === "fallback" && (
+        <section className="fallback-page">
+          <div className={`fallback-hero ${tone}`}>
+            <label>FALLBACK DECISION</label>
+            <strong>{fallback.action.replaceAll("_", " ")}</strong>
+            <p>{fallback.reason}</p>
           </div>
-          <button onClick={evaluate} disabled={!file || busy}>
-            <span>{busy ? "ANALYZING FRAME…" : "RUN SAFETY EVALUATION"}</span>
-            <b>→</b>
-          </button>
+          <div className="two-col">
+            <div className="card">
+              <label>DRIVER / OCCUPANCY</label>
+              <h2>{fallback.driver_present ? "Driver Present" : "Driver Absent"}</h2>
+              <p className="muted">Occupancy is supplied by the caller; it is not inferred by the ML model.</p>
+              <div className="occupancy"><span className={fallback.driver_present ? "on" : ""}>DRIVER PRESENT</span><span className={!fallback.driver_present ? "on" : ""}>DRIVER ABSENT</span></div>
+            </div>
+            <div className="card">
+              <label>TAKEOVER STATUS</label>
+              <h2>{fallback.acknowledged ? "Acknowledged" : fallback.action === "TAKEOVER_REQUESTED" ? "Awaiting acknowledgement" : "Not requested"}</h2>
+              {fallback.action === "TAKEOVER_REQUESTED" && !fallback.acknowledged && (
+                <button className="takeover" onClick={acknowledge}>Acknowledge Driver Takeover</button>
+              )}
+              {fallback.action === "TAKEOVER_REQUESTED" && !fallback.acknowledged && <div className="countdown">{Number(fallback.countdown_s).toFixed(1)}<small>s</small></div>}
+              <p className="notice">SAFE_PULL_OVER is a simulated safety decision in this prototype; no physical vehicle actuator is controlled.</p>
+            </div>
+          </div>
         </section>
+      )}
 
-        <footer className="footer">
-          <span>METAMORPHIC CIRCUIT BREAKER · VEHICLE SAFETY DEMONSTRATION</span>
-          <span>SAFE_PULL_OVER is simulated · No physical vehicle actuator is controlled</span>
-        </footer>
-      </div>
-    </main>
+      <footer>
+        <span>METAMORPHIC CIRCUIT BREAKER · LIVE PYTORCH INFERENCE</span>
+        <span>22 metamorphic tests · 3 semantic families · external safety layer</span>
+      </footer>
+    </div>
   );
 }
 
