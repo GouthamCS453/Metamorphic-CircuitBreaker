@@ -1,0 +1,7 @@
+[OK]   severity weights descending: {'mild': 1.0, 'moderate': 0.6, 'severe': 0.3}
+[FAIL] M_k == 3 for every family: {'geometric': 3, 'photometric': 3, 'sensor_noise': 2}
+[OK]   no identity tiers (found 0)
+[FAIL] theta_warn < theta_trip for every theta_trip
+[OK]   alpha/beta/gamma = (0.5, 0.35, 0.15)
+
+2 failing checks
