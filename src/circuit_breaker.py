@@ -37,13 +37,22 @@ class CircuitBreakerConfig:
     beta: float = 0.35         # Weight for cross-family spread score
     gamma: float = 0.15        # Weight for baseline model uncertainty (1 - c0)
     tau_fam: float = 0.35      # Family compromise threshold (35%)
-    theta_warn: float = 0.25   # Warning threshold (enters HALF_OPEN)
+    theta_warn: Optional[float] = None  # Warning threshold (enters HALF_OPEN)
     theta_trip: float = 0.55   # Trip threshold (enters OPEN)
 
     def __post_init__(self) -> None:
         total_weights = self.alpha + self.beta + self.gamma
         if abs(total_weights - 1.0) > 1e-5:
             raise ValueError(f"alpha + beta + gamma must equal 1.0, got {total_weights:.4f}")
+
+        # Section 3.4: Derive theta_warn when omitted; enforce theta_warn < theta_trip
+        if self.theta_warn is None:
+            self.theta_warn = round(0.5 * self.theta_trip, 4)
+
+        assert self.theta_warn < self.theta_trip, (
+            f"theta_warn ({self.theta_warn}) must be strictly less than "
+            f"theta_trip ({self.theta_trip})"
+        )
 
 
 @dataclass
@@ -148,7 +157,7 @@ class MetamorphicCircuitBreaker:
             total_possible_weights = sum(t.weight for t in tests)
             score_m = (weighted_failures / total_possible_weights) if total_possible_weights > 0 else 0.0
 
-            type_scores[t_type] = round(score_m, 4)
+            type_scores[t_type] = float(score_m)
             if t_type not in family_to_types[fam]:
                 family_to_types[fam].append(t_type)
 
@@ -160,7 +169,7 @@ class MetamorphicCircuitBreaker:
                 ir_k = sum(type_scores[t] for t in t_types) / len(t_types)
             else:
                 ir_k = 0.0
-            family_instability[fam] = round(ir_k, 4)
+            family_instability[fam] = float(ir_k)
 
         # Peak family calculation
         peak_fam = max(family_instability, key=lambda k: family_instability[k])
@@ -180,7 +189,7 @@ class MetamorphicCircuitBreaker:
             + self.config.beta * cfs
             + self.config.gamma * baseline_uncertainty
         )
-        cbi = max(0.0, min(1.0, round(cbi, 4)))
+        cbi = float(max(0.0, min(1.0, cbi)))
 
         # ── Step 7: Circuit Breaker State Transition ──────────────────────────
         if cbi < self.config.theta_warn:
@@ -196,13 +205,13 @@ class MetamorphicCircuitBreaker:
         return DiagnosticReport(
             baseline_idx=base_idx,
             baseline_label=base_label,
-            baseline_confidence=round(base_conf, 4),
+            baseline_confidence=float(base_conf),
             test_results=test_results,
             type_scores=type_scores,
             family_instability=family_instability,
             peak_family=peak_fam,
             peak_family_score=peak_fam_score,
-            cross_family_spread=round(cfs, 4),
+            cross_family_spread=float(cfs),
             compromised_families=compromised,
             cbi=cbi,
             state=state,

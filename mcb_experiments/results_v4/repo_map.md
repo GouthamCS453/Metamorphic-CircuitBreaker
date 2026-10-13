@@ -1,0 +1,15 @@
+# Repository Script & Functionality Mapping (v4 Protocol)
+
+| Role | Legacy / Working Script | Destination / v4 Script (`mcb_experiments/v4/`) | Description & Functionality |
+|---|---|---|---|
+| Batch benchmark & cache | `test_suite/test2_batch_benchmark.py` | `mcb_experiments/v4/test2_batch_benchmark.py` | Evaluates model on original + all 40 transform variants across the full held-out pool; exports `per_sample_scores.csv` and `logits.npy`. |
+| Baseline comparison | `test_suite/test3_baseline_comparison.py` | `mcb_experiments/v4/test3_baseline_comparison.py` | Implements baselines: k-of-n flips (`kflip_1` to `kflip_8`), flip fraction (`ff`), TTA categorical variance (`tta_var`), softmax entropy, MSP, head-only MC-Dropout (`mcdo_score`), and temperature-scaled entropy (`entropy_ts`). |
+| Family profile | `test_suite/test4_family_profiling.py` | `mcb_experiments/v4/test4_family_profiling.py` | Computes per-family instability (`ir_geometric`, `ir_photometric`, `ir_sensor_noise`), identifies dominant failure family, and compares against flat flip rates. |
+| Calibration & ablation | `test_suite/test5_threshold_ablation.py` | `mcb_experiments/v4/test5_calibration_ablation.py` | Grid search on Partition A (`op_j`, `op_far10`), saves `grid_search_A.csv`, evaluates frozen thresholds on Partition B once; runs ablations A1-A5. |
+| Latency | `test_suite/test6_latency_benchmark.py` | `mcb_experiments/v4/test6_latency.py` | Measures latency breakdown (`T_base`, `T_gen`, `T_batch`, `T_cbi`, `T_total`, `T_mcdo`, `T_entropy`) with 20 warm-up runs and 100 timed runs on documented hardware. |
+| Grad-CAM audit | `test_suite/test7_gradcam_audit.py` | `mcb_experiments/v4/test7_gradcam_audit.py` | Computes saliency drift metrics (cosine similarity, top-20% IoU, centroid distance) comparing original and transformed images with target fixed to baseline prediction. |
+| Web images | `test_suite/test1_in_the_wild.py` | `mcb_experiments/v4/test1_in_the_wild.py` | Qualitative out-of-distribution traffic sign demonstration. |
+| Fault injection | *New requirement* | `mcb_experiments/v4/test8_fault_injection.py` | Direct test of family attribution using unseen corruptions across 100 samples per family + 100 clean controls; reports confusion matrix, lift, cross-contamination, and D4 rule. |
+| Verification & packaging | *New requirement* | `mcb_experiments/results_v4/verify_results.py` | Mandatory protocol verifier: recomputes all summary metrics from `per_sample_scores.csv`, validates confusion matrices, CIs, decision rules D1-D4, and generates `HEADLINE.md` and `results_summary.json`. |
+| Framework core | `src/metamorphic_families.py` | `src/metamorphic_families.py` | Dynamic YAML-based transform matrix loader, 3 families, 3 types per family, 40 variants, descending severity weights, GTSRB shear replacement. |
+| Circuit breaker engine | `src/circuit_breaker.py` | `src/circuit_breaker.py` | Level 1/2 normalization, Cross-Family Spread (CFS), Composite Brittleness Index (CBI), automatic warning threshold derivation (`theta_warn = 0.5 * theta_trip`), three-state machine. |

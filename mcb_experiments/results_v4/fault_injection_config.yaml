@@ -1,0 +1,26 @@
+# Fault Injection Configuration (Section 8.1)
+version: 4.0
+target_domain: GTSRB
+sample_count_per_family: 100
+control_sample_count: 100
+families:
+  sensor_noise:
+    corruptions:
+      motion_blur: {k: 7, ang: 0.0}
+      defocus_blur: {r: 2}
+      shot_noise: {scale: 30.0}
+      salt_pepper: {p: 0.03}
+  photometric:
+    corruptions:
+      gamma_dark: {g: 0.6}
+      gamma_bright: {g: 1.6}
+      vignette: {s: 0.5}
+      white_balance: {r: 1.15, b: 0.85}
+  geometric:
+    corruptions:
+      translate: {f: 0.08}
+      perspective: {f: 0.05}
+      crop_resize: {f: 0.08}
+frozen_thresholds:
+  tau_fam: 0.05
+  theta_trip: 0.3

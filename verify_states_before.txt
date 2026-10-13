@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\Aparna\Miniproject\scripts\verify_states.py", line 21, in <module>
+    model = MobileNetAdapter()
+            ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aparna\Miniproject\src\models\mobilenet_adapter.py", line 45, in __init__
+    self.model = load_model(ckpt, self.device)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aparna\Miniproject\src\utils.py", line 88, in load_model
+    raise FileNotFoundError(
+FileNotFoundError: 
+  Checkpoint not found: C:\Users\Aparna\Miniproject\checkpoints\best_model.pth
+  Please train the model first:
+    python src/train.py --data_dir data/isic2019
+
+============================================================
+FIX VERIFICATION: retain_grad RuntimeError
+============================================================

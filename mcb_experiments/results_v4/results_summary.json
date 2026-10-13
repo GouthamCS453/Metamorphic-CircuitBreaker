@@ -1,0 +1,619 @@
+{
+  "member_info": {
+    "domain_name": "gtsrb",
+    "model_backbone": "mobilenet_v3_small",
+    "hardware_device": "Intel CPU"
+  },
+  "provenance": {
+    "git_commit": "92dd9c9b6a5a80bf32b2a6fb13c68debfb3001eb",
+    "split_seed": 42,
+    "partition_B_evaluations": 1,
+    "group_aware": true,
+    "checkpoint_selected_on_same_split": true
+  },
+  "transform_bank": {
+    "n_variants": 40,
+    "types_per_family": {
+      "geometric": 3,
+      "photometric": 3,
+      "sensor_noise": 3
+    },
+    "severity_weights": [
+      1.0,
+      0.6,
+      0.3
+    ]
+  },
+  "dataset_split": {
+    "pool": 11763,
+    "A": {
+      "n": 5881,
+      "errors": 257
+    },
+    "B": {
+      "n": 5882,
+      "errors": 221
+    }
+  },
+  "thresholds_from_A": {
+    "mcb_op_j": {
+      "tau_fam": 0.05,
+      "theta_trip": 0.3,
+      "theta_warn": 0.15
+    },
+    "mcb_op_far10": {
+      "tau_fam": 0.1,
+      "theta_trip": 0.25,
+      "theta_warn": 0.125
+    }
+  },
+  "B_results": {
+    "standalone": {
+      "operating_point": "none",
+      "tp": 0,
+      "fp": 0,
+      "tn": 5661,
+      "fn": 221,
+      "recall": 0.0,
+      "recall_ci95": [
+        0.0,
+        0.0
+      ],
+      "far": 0.0,
+      "far_ci95": [
+        0.0,
+        0.0
+      ],
+      "youden_j": 0.0,
+      "auroc": 0.5,
+      "auroc_ci95": [
+        0.5,
+        0.5
+      ],
+      "critical_error_recall": 0.0
+    },
+    "kflip_1": {
+      "operating_point": "k=1",
+      "tp": 219,
+      "fp": 4739,
+      "tn": 922,
+      "fn": 2,
+      "recall": 0.9909502262443439,
+      "recall_ci95": [
+        0.9676091324376237,
+        0.9975147592265525
+      ],
+      "far": 0.8371312488959548,
+      "far_ci95": [
+        0.827284274258988,
+        0.8465209738877563
+      ],
+      "youden_j": 0.15381897734838912,
+      "auroc": null,
+      "auroc_ci95": [
+        null,
+        null
+      ],
+      "critical_error_recall": 1.0
+    },
+    "kflip_2": {
+      "operating_point": "k=2",
+      "tp": 206,
+      "fp": 2886,
+      "tn": 2775,
+      "fn": 15,
+      "recall": 0.9321266968325792,
+      "recall_ci95": [
+        0.8910467044739486,
+        0.9584402232120314
+      ],
+      "far": 0.5098039215686274,
+      "far_ci95": [
+        0.49677913884096714,
+        0.522815407280146
+      ],
+      "youden_j": 0.4223227752639518,
+      "auroc": null,
+      "auroc_ci95": [
+        null,
+        null
+      ],
+      "critical_error_recall": 1.0
+    },
+    "kflip_3": {
+      "operating_point": "k=3",
+      "tp": 199,
+      "fp": 1332,
+      "tn": 4329,
+      "fn": 22,
+      "recall": 0.9004524886877828,
+      "recall_ci95": [
+        0.85388200887383,
+        0.9333388612854289
+      ],
+      "far": 0.23529411764705882,
+      "far_ci95": [
+        0.22442591713725807,
+        0.24652133759268885
+      ],
+      "youden_j": 0.6651583710407241,
+      "auroc": null,
+      "auroc_ci95": [
+        null,
+        null
+      ],
+      "critical_error_recall": 1.0
+    },
+    "kflip_5": {
+      "operating_point": "k=5",
+      "tp": 172,
+      "fp": 419,
+      "tn": 5242,
+      "fn": 49,
+      "recall": 0.7782805429864253,
+      "recall_ci95": [
+        0.7190196358134651,
+        0.8280321553141556
+      ],
+      "far": 0.07401519166225048,
+      "far_ci95": [
+        0.06748046399165915,
+        0.081127680673851
+      ],
+      "youden_j": 0.7042653513241749,
+      "auroc": null,
+      "auroc_ci95": [
+        null,
+        null
+      ],
+      "critical_error_recall": 1.0
+    },
+    "kflip_8": {
+      "operating_point": "k=8",
+      "tp": 125,
+      "fp": 160,
+      "tn": 5501,
+      "fn": 96,
+      "recall": 0.5656108597285068,
+      "recall_ci95": [
+        0.49968893867396974,
+        0.6292907519170952
+      ],
+      "far": 0.02826355767532238,
+      "far_ci95": [
+        0.024255938091763535,
+        0.03291099134188559
+      ],
+      "youden_j": 0.5373473020531844,
+      "auroc": null,
+      "auroc_ci95": [
+        null,
+        null
+      ],
+      "critical_error_recall": 1.0
+    },
+    "ff": {
+      "operating_point": "op_j",
+      "tp": 172,
+      "fp": 419,
+      "tn": 5242,
+      "fn": 49,
+      "recall": 0.7782805429864253,
+      "recall_ci95": [
+        0.7190196358134651,
+        0.8280321553141556
+      ],
+      "far": 0.07401519166225048,
+      "far_ci95": [
+        0.06748046399165915,
+        0.081127680673851
+      ],
+      "youden_j": 0.7042653513241749,
+      "auroc": 0.9098659388791662,
+      "auroc_ci95": [
+        0.8840925248097272,
+        0.9337641372201556
+      ],
+      "critical_error_recall": 1.0
+    },
+    "softmax_entropy": {
+      "operating_point": "op_j",
+      "tp": 189,
+      "fp": 1578,
+      "tn": 4083,
+      "fn": 32,
+      "recall": 0.8552036199095022,
+      "recall_ci95": [
+        0.8027388388193673,
+        0.8955305205874329
+      ],
+      "far": 0.27874933757286696,
+      "far_ci95": [
+        0.2672219267221293,
+        0.29057682973383225
+      ],
+      "youden_j": 0.5764542823366352,
+      "auroc": 0.8693643718583016,
+      "auroc_ci95": [
+        0.8489429591352604,
+        0.8898473922506334
+      ],
+      "critical_error_recall": 1.0
+    },
+    "msp": {
+      "operating_point": "op_j",
+      "tp": 185,
+      "fp": 720,
+      "tn": 4941,
+      "fn": 36,
+      "recall": 0.8371040723981901,
+      "recall_ci95": [
+        0.7827335861282823,
+        0.8799551689775347
+      ],
+      "far": 0.1271860095389507,
+      "far_ci95": [
+        0.11875868707437523,
+        0.13611897799573017
+      ],
+      "youden_j": 0.7099180628592394,
+      "auroc": 0.9203469623615217,
+      "auroc_ci95": [
+        0.9039543689900171,
+        0.9352486870339186
+      ],
+      "critical_error_recall": 1.0
+    },
+    "tta_var": {
+      "operating_point": "op_j",
+      "tp": 172,
+      "fp": 419,
+      "tn": 5242,
+      "fn": 49,
+      "recall": 0.7782805429864253,
+      "recall_ci95": [
+        0.7190196358134651,
+        0.8280321553141556
+      ],
+      "far": 0.07401519166225048,
+      "far_ci95": [
+        0.06748046399165915,
+        0.081127680673851
+      ],
+      "youden_j": 0.7042653513241749,
+      "auroc": 0.9096906130792866,
+      "auroc_ci95": [
+        0.883943432024715,
+        0.9334800549936478
+      ],
+      "critical_error_recall": 1.0
+    },
+    "mcdo_headonly": {
+      "operating_point": "op_j",
+      "tp": 191,
+      "fp": 1798,
+      "tn": 3863,
+      "fn": 30,
+      "recall": 0.8642533936651584,
+      "recall_ci95": [
+        0.8128277248627183,
+        0.9032319366945738
+      ],
+      "far": 0.3176117293764353,
+      "far_ci95": [
+        0.30561133457334966,
+        0.32985949659693414
+      ],
+      "youden_j": 0.5466416642887231,
+      "auroc": 0.8555854484042115,
+      "auroc_ci95": [
+        0.8340900647979339,
+        0.8768973371159025
+      ],
+      "critical_error_recall": 1.0
+    },
+    "entropy_ts": {
+      "operating_point": "op_j",
+      "tp": 194,
+      "fp": 932,
+      "tn": 4729,
+      "fn": 27,
+      "recall": 0.8778280542986425,
+      "recall_ci95": [
+        0.8280821756572311,
+        0.9146629391257984
+      ],
+      "far": 0.16463522345875287,
+      "far_ci95": [
+        0.15520254116093682,
+        0.1745227595429699
+      ],
+      "youden_j": 0.7131928308398896,
+      "auroc": 0.9367024363312907,
+      "auroc_ci95": [
+        0.9254252030764157,
+        0.9472493231063339
+      ],
+      "critical_error_recall": 1.0
+    },
+    "mcb_prior_default": {
+      "operating_point": "prior_default",
+      "tp": 63,
+      "fp": 18,
+      "tn": 5643,
+      "fn": 158,
+      "recall": 0.2850678733031674,
+      "recall_ci95": [
+        0.2296161868018119,
+        0.3478641371240097
+      ],
+      "far": 0.003179650238473768,
+      "far_ci95": [
+        0.0020122639885057966,
+        0.005020871765899057
+      ],
+      "youden_j": 0.28188822306469363,
+      "auroc": 0.9052413449443111,
+      "auroc_ci95": [
+        0.8815398565499044,
+        0.927266807210768
+      ],
+      "critical_error_recall": 0.5
+    },
+    "mcb_op_j": {
+      "operating_point": "op_j",
+      "tp": 186,
+      "fp": 721,
+      "tn": 4940,
+      "fn": 35,
+      "recall": 0.8416289592760181,
+      "recall_ci95": [
+        0.7877146004272769,
+        0.8838693057537858
+      ],
+      "far": 0.1273626567744215,
+      "far_ci95": [
+        0.11893007561461766,
+        0.13630064434055283
+      ],
+      "youden_j": 0.7142663025015966,
+      "auroc": 0.9102486533702863,
+      "auroc_ci95": [
+        0.8847299406108408,
+        0.9337882209337808
+      ],
+      "critical_error_recall": 1.0
+    },
+    "mcb_op_far10": {
+      "operating_point": "op_far10",
+      "tp": 173,
+      "fp": 530,
+      "tn": 5131,
+      "fn": 48,
+      "recall": 0.7828054298642534,
+      "recall_ci95": [
+        0.7238597464392651,
+        0.8320871957636014
+      ],
+      "far": 0.09362303479950539,
+      "far_ci95": [
+        0.08630769933692253,
+        0.10148953757081375
+      ],
+      "youden_j": 0.689182395064748,
+      "auroc": 0.9042884759952782,
+      "auroc_ci95": [
+        0.880635442574485,
+        0.9268561304112899
+      ],
+      "critical_error_recall": 1.0
+    }
+  },
+  "ablations": {
+    "A1": {
+      "description": "Flat weighted flip score vs hierarchical CBI",
+      "auroc_flat": 0.9277182091767834,
+      "ci_flat": [
+        0.9078191099775551,
+        0.9464647272819419
+      ],
+      "auroc_diff_vs_mcb": -0.017469555806497086,
+      "ci_diff": [
+        -0.028519597600823184,
+        -0.007984403122052931
+      ]
+    },
+    "A2": {
+      "description": "Baseline msp vs gamma=0 (0.6, 0.4, 0.0) vs default",
+      "auroc_msp": 0.9203469623615217,
+      "auroc_gamma0": 0.893773561039719,
+      "ci_gamma0": [
+        0.8653372273116096,
+        0.9207035805521757
+      ],
+      "auroc_diff_mcb_vs_gamma0": 0.016475092330567206,
+      "ci_diff_gamma0": [
+        0.01018593700525347,
+        0.023822626186558584
+      ]
+    },
+    "A3": {
+      "description": "Ascending weights [0.1, 0.2, 0.3] vs descending [1.0, 0.6, 0.3]",
+      "auroc_ascending": 0.906626379120182,
+      "ci_ascending": [
+        0.8800152749499031,
+        0.9301567486903618
+      ],
+      "auroc_diff_mcb_vs_ascending": 0.003622274250104277,
+      "ci_diff_ascending": [
+        -0.003346960115289621,
+        0.010346296672073286
+      ]
+    },
+    "A4": {
+      "description": "Five (alpha, beta, gamma) weight configs",
+      "configs": [
+        {
+          "config": "alpha=0.50, beta=0.35, gamma=0.15",
+          "auroc": 0.9102486533702863,
+          "ci": [
+            0.8847299406108408,
+            0.9337882209337808
+          ],
+          "diff_vs_default": 0.0,
+          "ci_diff": [
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "config": "alpha=0.60, beta=0.40, gamma=0.00",
+          "auroc": 0.893773561039719,
+          "ci": [
+            0.8653372273116096,
+            0.9207035805521757
+          ],
+          "diff_vs_default": 0.016475092330567206,
+          "ci_diff": [
+            0.01018593700525347,
+            0.023822626186558584
+          ]
+        },
+        {
+          "config": "alpha=0.70, beta=0.20, gamma=0.10",
+          "auroc": 0.9041025212968163,
+          "ci": [
+            0.8787875653506764,
+            0.9280208079735652
+          ],
+          "diff_vs_default": 0.00614613207346992,
+          "ci_diff": [
+            0.002421425251733625,
+            0.010430799810054965
+          ]
+        },
+        {
+          "config": "alpha=0.25, beta=0.25, gamma=0.50",
+          "auroc": 0.9216378738338256,
+          "ci": [
+            0.899882499870296,
+            0.9417522163159685
+          ],
+          "diff_vs_default": -0.011389220463539237,
+          "ci_diff": [
+            -0.018088426187096187,
+            -0.00544996859233486
+          ]
+        },
+        {
+          "config": "alpha=0.30, beta=0.60, gamma=0.10",
+          "auroc": 0.9092271700730091,
+          "ci": [
+            0.8838342725733582,
+            0.9324925123496918
+          ],
+          "diff_vs_default": 0.0010214832972770397,
+          "ci_diff": [
+            -0.00040741533257345754,
+            0.0026547534268660323
+          ]
+        }
+      ]
+    },
+    "A5": {
+      "description": "CFS removed: (alpha+beta)*max(IR_k) + gamma*(1-c0)",
+      "auroc_no_cfs": 0.8940942299350113,
+      "ci_no_cfs": [
+        0.8688088050551095,
+        0.9179007293420722
+      ],
+      "auroc_diff_mcb_vs_no_cfs": 0.016154423435274956,
+      "ci_diff_no_cfs": [
+        0.005926402380670409,
+        0.02716455171127178
+      ]
+    }
+  },
+  "decision_rules": {
+    "D1": "NOT MET",
+    "D2": "NOT MET",
+    "D3": "MET",
+    "D4": "NOT MET"
+  },
+  "family_profile": {
+    "mean_ir_all": {
+      "geometric": 0.03399905748730888,
+      "photometric": 0.013387557639423276,
+      "sensor_noise": 0.0893537822795683
+    },
+    "mean_ir_errors": {
+      "geometric": 0.3223783440501707,
+      "photometric": 0.15408430578709217,
+      "sensor_noise": 0.23894578074144643
+    },
+    "mean_ir_correct": {
+      "geometric": 0.022741007261131093,
+      "photometric": 0.007894891795820588,
+      "sensor_noise": 0.0835138544116872
+    },
+    "dominant_axis": "geometric"
+  },
+  "fault_attribution": {
+    "n_per_family": 100,
+    "trip_rate": {
+      "geometric": 0.14,
+      "photometric": 0.22,
+      "sensor_noise": 0.54,
+      "clean_control": 0.15
+    },
+    "confusion_matrix": {
+      "geometric": {
+        "geometric": 20,
+        "photometric": 34,
+        "sensor_noise": 35,
+        "unattributable": 11
+      },
+      "photometric": {
+        "geometric": 23,
+        "photometric": 35,
+        "sensor_noise": 25,
+        "unattributable": 17
+      },
+      "sensor_noise": {
+        "geometric": 40,
+        "photometric": 25,
+        "sensor_noise": 20,
+        "unattributable": 15
+      }
+    },
+    "accuracy_all": 0.25,
+    "accuracy_ci95": [
+      0.20436911491211526,
+      0.30195260008675257
+    ],
+    "accuracy_tripped_only": 0.26666666666666666,
+    "binomial_p_vs_chance": 0.9993013315728605
+  },
+  "latency_ms": {
+    "device": "Intel CPU",
+    "T_base": 10.61,
+    "T_gen": 82.36,
+    "T_batch": 98.19,
+    "T_cbi": 0.47,
+    "T_total": 191.62,
+    "T_mcdo": 10.44
+  },
+  "gradcam": {
+    "stable": {
+      "cosine": 0.7853683500073384,
+      "iou": 0.5729247652702982,
+      "centroid": 0.06137838826096633
+    },
+    "tripped": {
+      "cosine": 0.4413635874772444,
+      "iou": 0.2609534607315867,
+      "centroid": 0.13008922781412957
+    },
+    "target_fixed_to_baseline_class": true
+  }
+}

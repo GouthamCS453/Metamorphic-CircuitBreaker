@@ -1,0 +1,52 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\Aparna\Miniproject\scripts\verify_all.py", line 62, in <module>
+    model = MobileNetAdapter()
+            ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aparna\Miniproject\src\models\mobilenet_adapter.py", line 45, in __init__
+    self.model = load_model(ckpt, self.device)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Aparna\Miniproject\src\utils.py", line 88, in load_model
+    raise FileNotFoundError(
+FileNotFoundError: 
+  Checkpoint not found: C:\Users\Aparna\Miniproject\checkpoints\best_model.pth
+  Please train the model first:
+    python src/train.py --data_dir data/isic2019
+
+============================================================
+STEP 1: Metamorphic family / test matrix verification
+============================================================
+
+  Family: geometric (M_k = 3)
+    - rotation     -> ['mild', 'moderate', 'severe']
+    - scale        -> ['mild', 'moderate', 'severe']
+    - flip         -> ['moderate']
+
+  Family: photometric (M_k = 3)
+    - brightness   -> ['mild', 'moderate', 'severe']
+    - contrast     -> ['mild', 'moderate', 'severe']
+    - saturation   -> ['mild', 'moderate', 'severe']
+
+  Family: sensor_noise (M_k = 2)
+    - blur         -> ['mild', 'moderate', 'severe']
+    - noise        -> ['mild', 'moderate', 'severe']
+
+  Total tests: 22 (expected >= 20)
+  [OK] Test matrix complete
+
+============================================================
+STEP 2: DummyVisionModel model-agnostic verification
+============================================================
+  Baseline: CLASS_6 (54.17%)
+  Type scores: {'rotation': 1.0, 'scale': 0.0, 'flip': 0.0, 'brightness': 1.0, 'contrast': 1.0, 'saturation': 1.0, 'blur': 0.0, 'noise': 1.0}
+  Family IR_k: {'geometric': 0.3333, 'photometric': 1.0, 'sensor_noise': 0.5}
+  CFS: 0.6667
+  CBI: 0.8021
+  State: OPEN
+  [OK] CBI formula verified
+  [OK] DummyVisionModel model-agnostic check passed
+
+============================================================
+STEP 3: MobileNetAdapter evaluation pipeline
+============================================================

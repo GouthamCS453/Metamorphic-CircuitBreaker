@@ -1,3 +1,7 @@
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+
 from src.metamorphic_families import SEVERITY_WEIGHTS, HIERARCHICAL_TEST_MATRIX
 from src.circuit_breaker import CircuitBreakerConfig
 

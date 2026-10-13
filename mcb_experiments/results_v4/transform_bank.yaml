@@ -1,0 +1,136 @@
+# MCB v4 Transform Bank Specification (GTSRB Autonomous Perception)
+version: 4.0
+
+severity_weights:
+  mild: 1.0
+  moderate: 0.6
+  severe: 0.3
+  single: 1.0
+
+families:
+  geometric:
+    description: "Geometric transformations invariant for GTSRB traffic sign perception"
+    transforms:
+      rotation:
+        description: "In-plane rotation"
+        tiers:
+          mild:
+            n_variants: 2
+            values: [-5.0, 5.0]
+            unit: "degrees"
+          moderate:
+            n_variants: 2
+            values: [-15.0, 15.0]
+            unit: "degrees"
+          severe:
+            n_variants: 2
+            values: [-30.0, 30.0]
+            unit: "degrees"
+      scale:
+        description: "Camera distance scale / zoom"
+        tiers:
+          mild:
+            n_variants: 2
+            values: [0.95, 1.05]
+          moderate:
+            n_variants: 2
+            values: [0.90, 1.10]
+          severe:
+            n_variants: 2
+            values: [0.80, 1.20]
+      shear:
+        description: "Affine horizontal shear perspective distortion"
+        tiers:
+          single:
+            n_variants: 1
+            values: [0.05]
+            unit: "factor"
+
+  photometric:
+    description: "Photometric illumination, contrast, and saturation variations"
+    transforms:
+      brightness:
+        description: "Illumination variation"
+        tiers:
+          mild:
+            n_variants: 2
+            values: [-10, 10]
+          moderate:
+            n_variants: 2
+            values: [-25, 25]
+          severe:
+            n_variants: 2
+            values: [-40, 40]
+      contrast:
+        description: "Sunlight diffusion and contrast scaling"
+        tiers:
+          mild:
+            n_variants: 2
+            values: [0.90, 1.10]
+          moderate:
+            n_variants: 2
+            values: [0.75, 1.25]
+          severe:
+            n_variants: 2
+            values: [0.60, 1.40]
+      saturation:
+        description: "Color saturation / camera white balance shifts"
+        tiers:
+          mild:
+            n_variants: 2
+            values: [0.90, 1.10]
+          moderate:
+            n_variants: 2
+            values: [0.70, 1.30]
+          severe:
+            n_variants: 2
+            values: [0.50, 1.50]
+
+  sensor_noise:
+    description: "Camera sensor degradation and transmission channel artifacts"
+    transforms:
+      blur:
+        description: "Gaussian blur defocus"
+        tiers:
+          mild:
+            n_variants: 1
+            values: [0.5]
+            unit: "sigma"
+          moderate:
+            n_variants: 1
+            values: [1.0]
+            unit: "sigma"
+          severe:
+            n_variants: 1
+            values: [1.5]
+            unit: "sigma"
+      noise:
+        description: "Additive Gaussian electronic noise"
+        tiers:
+          mild:
+            n_variants: 1
+            values: [0.02]
+            unit: "sigma"
+          moderate:
+            n_variants: 1
+            values: [0.05]
+            unit: "sigma"
+          severe:
+            n_variants: 1
+            values: [0.08]
+            unit: "sigma"
+      compression:
+        description: "Lossy JPEG compression transmission artifacts"
+        tiers:
+          mild:
+            n_variants: 1
+            values: [90]
+            unit: "quality"
+          moderate:
+            n_variants: 1
+            values: [70]
+            unit: "quality"
+          severe:
+            n_variants: 1
+            values: [50]
+            unit: "quality"

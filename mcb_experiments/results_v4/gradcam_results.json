@@ -1,0 +1,23 @@
+{
+  "stable": {
+    "cosine_mean": 0.7853683500073384,
+    "cosine_sd": 0.2646319374195163,
+    "iou_mean": 0.5729247652702982,
+    "iou_sd": 0.254990441697201,
+    "centroid_mean": 0.06137838826096633,
+    "centroid_sd": 0.07097848614059579
+  },
+  "tripped": {
+    "cosine_mean": 0.4413635874772444,
+    "cosine_sd": 0.33523056526622325,
+    "iou_mean": 0.2609534607315867,
+    "iou_sd": 0.26393632803398026,
+    "centroid_mean": 0.13008922781412957,
+    "centroid_sd": 0.10123078287183737
+  },
+  "target_fixed_to_baseline_class": true,
+  "n_samples_evaluated": {
+    "tripped": 50,
+    "stable": 50
+  }
+}

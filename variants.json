@@ -1,0 +1,282 @@
+[
+  {
+    "family": "geometric",
+    "type": "rotation",
+    "tier": "mild",
+    "name": "Rotation mild (-5)",
+    "param_value": -5.0
+  },
+  {
+    "family": "geometric",
+    "type": "rotation",
+    "tier": "mild",
+    "name": "Rotation mild (+5)",
+    "param_value": 5.0
+  },
+  {
+    "family": "geometric",
+    "type": "rotation",
+    "tier": "moderate",
+    "name": "Rotation moderate (-15)",
+    "param_value": -15.0
+  },
+  {
+    "family": "geometric",
+    "type": "rotation",
+    "tier": "moderate",
+    "name": "Rotation moderate (+15)",
+    "param_value": 15.0
+  },
+  {
+    "family": "geometric",
+    "type": "rotation",
+    "tier": "severe",
+    "name": "Rotation severe (-30)",
+    "param_value": -30.0
+  },
+  {
+    "family": "geometric",
+    "type": "rotation",
+    "tier": "severe",
+    "name": "Rotation severe (+30)",
+    "param_value": 30.0
+  },
+  {
+    "family": "geometric",
+    "type": "scale",
+    "tier": "mild",
+    "name": "Scale mild (+0.95)",
+    "param_value": 0.95
+  },
+  {
+    "family": "geometric",
+    "type": "scale",
+    "tier": "mild",
+    "name": "Scale mild (+1.05)",
+    "param_value": 1.05
+  },
+  {
+    "family": "geometric",
+    "type": "scale",
+    "tier": "moderate",
+    "name": "Scale moderate (+0.9)",
+    "param_value": 0.9
+  },
+  {
+    "family": "geometric",
+    "type": "scale",
+    "tier": "moderate",
+    "name": "Scale moderate (+1.1)",
+    "param_value": 1.1
+  },
+  {
+    "family": "geometric",
+    "type": "scale",
+    "tier": "severe",
+    "name": "Scale severe (+0.8)",
+    "param_value": 0.8
+  },
+  {
+    "family": "geometric",
+    "type": "scale",
+    "tier": "severe",
+    "name": "Scale severe (+1.2)",
+    "param_value": 1.2
+  },
+  {
+    "family": "geometric",
+    "type": "shear",
+    "tier": "single",
+    "name": "Shear single",
+    "param_value": 0.05
+  },
+  {
+    "family": "photometric",
+    "type": "brightness",
+    "tier": "mild",
+    "name": "Brightness mild (-10)",
+    "param_value": -10
+  },
+  {
+    "family": "photometric",
+    "type": "brightness",
+    "tier": "mild",
+    "name": "Brightness mild (+10)",
+    "param_value": 10
+  },
+  {
+    "family": "photometric",
+    "type": "brightness",
+    "tier": "moderate",
+    "name": "Brightness moderate (-25)",
+    "param_value": -25
+  },
+  {
+    "family": "photometric",
+    "type": "brightness",
+    "tier": "moderate",
+    "name": "Brightness moderate (+25)",
+    "param_value": 25
+  },
+  {
+    "family": "photometric",
+    "type": "brightness",
+    "tier": "severe",
+    "name": "Brightness severe (-40)",
+    "param_value": -40
+  },
+  {
+    "family": "photometric",
+    "type": "brightness",
+    "tier": "severe",
+    "name": "Brightness severe (+40)",
+    "param_value": 40
+  },
+  {
+    "family": "photometric",
+    "type": "contrast",
+    "tier": "mild",
+    "name": "Contrast mild (+0.9)",
+    "param_value": 0.9
+  },
+  {
+    "family": "photometric",
+    "type": "contrast",
+    "tier": "mild",
+    "name": "Contrast mild (+1.1)",
+    "param_value": 1.1
+  },
+  {
+    "family": "photometric",
+    "type": "contrast",
+    "tier": "moderate",
+    "name": "Contrast moderate (+0.75)",
+    "param_value": 0.75
+  },
+  {
+    "family": "photometric",
+    "type": "contrast",
+    "tier": "moderate",
+    "name": "Contrast moderate (+1.25)",
+    "param_value": 1.25
+  },
+  {
+    "family": "photometric",
+    "type": "contrast",
+    "tier": "severe",
+    "name": "Contrast severe (+0.6)",
+    "param_value": 0.6
+  },
+  {
+    "family": "photometric",
+    "type": "contrast",
+    "tier": "severe",
+    "name": "Contrast severe (+1.4)",
+    "param_value": 1.4
+  },
+  {
+    "family": "photometric",
+    "type": "saturation",
+    "tier": "mild",
+    "name": "Saturation mild (+0.9)",
+    "param_value": 0.9
+  },
+  {
+    "family": "photometric",
+    "type": "saturation",
+    "tier": "mild",
+    "name": "Saturation mild (+1.1)",
+    "param_value": 1.1
+  },
+  {
+    "family": "photometric",
+    "type": "saturation",
+    "tier": "moderate",
+    "name": "Saturation moderate (+0.7)",
+    "param_value": 0.7
+  },
+  {
+    "family": "photometric",
+    "type": "saturation",
+    "tier": "moderate",
+    "name": "Saturation moderate (+1.3)",
+    "param_value": 1.3
+  },
+  {
+    "family": "photometric",
+    "type": "saturation",
+    "tier": "severe",
+    "name": "Saturation severe (+0.5)",
+    "param_value": 0.5
+  },
+  {
+    "family": "photometric",
+    "type": "saturation",
+    "tier": "severe",
+    "name": "Saturation severe (+1.5)",
+    "param_value": 1.5
+  },
+  {
+    "family": "sensor_noise",
+    "type": "blur",
+    "tier": "mild",
+    "name": "Blur mild",
+    "param_value": 0.5
+  },
+  {
+    "family": "sensor_noise",
+    "type": "blur",
+    "tier": "moderate",
+    "name": "Blur moderate",
+    "param_value": 1.0
+  },
+  {
+    "family": "sensor_noise",
+    "type": "blur",
+    "tier": "severe",
+    "name": "Blur severe",
+    "param_value": 1.5
+  },
+  {
+    "family": "sensor_noise",
+    "type": "noise",
+    "tier": "mild",
+    "name": "Noise mild",
+    "param_value": 0.02
+  },
+  {
+    "family": "sensor_noise",
+    "type": "noise",
+    "tier": "moderate",
+    "name": "Noise moderate",
+    "param_value": 0.05
+  },
+  {
+    "family": "sensor_noise",
+    "type": "noise",
+    "tier": "severe",
+    "name": "Noise severe",
+    "param_value": 0.08
+  },
+  {
+    "family": "sensor_noise",
+    "type": "compression",
+    "tier": "mild",
+    "name": "Compression mild",
+    "param_value": 90
+  },
+  {
+    "family": "sensor_noise",
+    "type": "compression",
+    "tier": "moderate",
+    "name": "Compression moderate",
+    "param_value": 70
+  },
+  {
+    "family": "sensor_noise",
+    "type": "compression",
+    "tier": "severe",
+    "name": "Compression severe",
+    "param_value": 50
+  }
+]

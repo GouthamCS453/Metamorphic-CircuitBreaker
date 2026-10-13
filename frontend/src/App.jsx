@@ -37,13 +37,59 @@ function App() {
   const [tab, setTab] = useState("live");
   const [countdown, setCountdown] = useState(0);
 
+  // Calibration Studio State
+  const [calibData, setCalibData] = useState(null);
+  const [alpha, setAlpha] = useState(0.50);
+  const [beta, setBeta] = useState(0.35);
+  const [gamma, setGamma] = useState(0.15);
+  const [tauFam, setTauFam] = useState(0.05);
+  const [thetaTrip, setThetaTrip] = useState(0.30);
+  const [thetaWarn, setThetaWarn] = useState(0.150);
+  const [autoDeriveWarn, setAutoDeriveWarn] = useState(true);
+  const [activePresetId, setActivePresetId] = useState("op_j");
+  const [activeChart, setActiveChart] = useState("calibration_heatmap");
+  const [calibMsg, setCalibMsg] = useState("");
+  const [calibSaving, setCalibSaving] = useState(false);
+  const [simIr, setSimIr] = useState(0.40);
+  const [simCfs, setSimCfs] = useState(0.33);
+  const [simUnc, setSimUnc] = useState(0.20);
+
+  async function fetchCalibration() {
+    try {
+      const res = await fetch(`${API}/api/calibration`);
+      if (res.ok) {
+        const data = await res.json();
+        setCalibData(data);
+        if (data.active_config) {
+          setAlpha(Number(data.active_config.alpha));
+          setBeta(Number(data.active_config.beta));
+          setGamma(Number(data.active_config.gamma));
+          setTauFam(Number(data.active_config.tau_fam));
+          setThetaTrip(Number(data.active_config.theta_trip));
+          setThetaWarn(Number(data.active_config.theta_warn));
+        }
+      }
+    } catch {}
+  }
+
+  useEffect(() => {
+    fetchCalibration();
+  }, []);
+
   useEffect(() => {
     const ws = new WebSocket(WS);
     ws.onopen = () => setOnline(true);
     ws.onclose = () => setOnline(false);
     ws.onerror = () => setOnline(false);
     ws.onmessage = (event) => {
-      try { setResult(JSON.parse(event.data)); } catch {}
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "config_updated") {
+          fetchCalibration();
+        } else {
+          setResult(data);
+        }
+      } catch {}
     };
     return () => ws.close();
   }, []);
@@ -94,6 +140,63 @@ function App() {
       ...current,
       fallback: { ...current.fallback, acknowledged: true },
     }));
+  }
+
+  function selectPreset(preset) {
+    setAlpha(preset.alpha);
+    setBeta(preset.beta);
+    setGamma(preset.gamma);
+    setTauFam(preset.tau_fam);
+    setThetaTrip(preset.theta_trip);
+    setThetaWarn(preset.theta_warn);
+    setActivePresetId(preset.id);
+    setCalibMsg(`Loaded preset: "${preset.name}". Click "Apply to Live Circuit Breaker" to activate.`);
+  }
+
+  function handleThetaTripChange(val) {
+    const next = Number(val);
+    setThetaTrip(next);
+    if (autoDeriveWarn) {
+      setThetaWarn(Number((0.5 * next).toFixed(3)));
+    }
+  }
+
+  function autoNormalizeWeights() {
+    const sum = alpha + beta + gamma;
+    if (sum <= 0) return;
+    const a = Number((alpha / sum).toFixed(2));
+    const b = Number((beta / sum).toFixed(2));
+    const g = Number((1.0 - a - b).toFixed(2));
+    setAlpha(a);
+    setBeta(b);
+    setGamma(g);
+    setCalibMsg("Weights normalized to sum = 1.00");
+  }
+
+  async function applyCalibration() {
+    setCalibSaving(true);
+    try {
+      const res = await fetch(`${API}/api/calibration/update`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          alpha,
+          beta,
+          gamma,
+          tau_fam: tauFam,
+          theta_trip: thetaTrip,
+          theta_warn: thetaWarn,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Update failed");
+      setCalibMsg("Active Circuit Breaker successfully updated! Subsequent evaluations will use these parameters.");
+      fetchCalibration();
+    } catch (err) {
+      setCalibMsg(`Update failed: ${err.message}`);
+    } finally {
+      setCalibSaving(false);
+    }
   }
 
   const cb = result.circuit_breaker;
@@ -164,6 +267,7 @@ function App() {
         <button className={tab === "live" ? "active" : ""} onClick={() => setTab("live")}>Live Circuit Breaker</button>
         <button className={tab === "diagnostics" ? "active" : ""} onClick={() => setTab("diagnostics")}>Diagnostics</button>
         <button className={tab === "fallback" ? "active" : ""} onClick={() => setTab("fallback")}>Safety Response</button>
+        <button className={tab === "calibration" ? "active" : ""} onClick={() => setTab("calibration")}>Parameter Calibration Studio</button>
       </nav>
 
       {tab === "live" && (
@@ -368,6 +472,371 @@ function App() {
               <p className="notice">Prototype only · Safe pull-over is a simulated safety response. No physical vehicle controls are connected.</p>
             </div>
           </div>
+        </section>
+      )}
+
+      {tab === "calibration" && (
+        <section className="calib-studio">
+          <div className="studio-header">
+            <div>
+              <label>RUNTIME CALIBRATION & BENCHMARKING</label>
+              <h2>Parameter Calibration Studio</h2>
+              <p>Tune composite brittleness index (CBI) weights and three-state decision boundaries with live scenario simulation and empirical evaluation metrics.</p>
+            </div>
+            <div className="active-config-pill">
+              ACTIVE: α={calibData?.active_config?.alpha ?? alpha} · β={calibData?.active_config?.beta ?? beta} · γ={calibData?.active_config?.gamma ?? gamma} | τ={calibData?.active_config?.tau_fam ?? tauFam} | θ_trip={calibData?.active_config?.theta_trip ?? thetaTrip} | θ_warn={calibData?.active_config?.theta_warn ?? thetaWarn}
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-title">
+              <div>
+                <label>EMPIRICAL PRESETS</label>
+                <h2>Calibrated Operating Points</h2>
+              </div>
+              <span className="muted">Rigorous GTSRB v4 Calibration</span>
+            </div>
+            <div className="presets-grid">
+              {calibData?.presets && Object.values(calibData.presets).map((p) => (
+                <div className={`preset-card ${activePresetId === p.id ? "active" : ""}`} key={p.id}>
+                  <div className="preset-top">
+                    <div>
+                      <h3>{p.name}</h3>
+                      <span className="preset-badge">{p.badge}</span>
+                    </div>
+                  </div>
+                  <p className="preset-desc">{p.description}</p>
+                  <div className="preset-params">
+                    <span>τ: <b>{p.tau_fam}</b></span>
+                    <span>θ_trip: <b>{p.theta_trip}</b></span>
+                    <span>θ_warn: <b>{p.theta_warn}</b></span>
+                    <span>α/β/γ: <b>{p.alpha}/{p.beta}/{p.gamma}</b></span>
+                  </div>
+                  <div className="preset-metrics">
+                    <div><span>Recall:</span><strong>{(p.recall * 100).toFixed(1)}%</strong></div>
+                    <div><span>FAR:</span><strong>{(p.far * 100).toFixed(1)}%</strong></div>
+                    <div><span>Youden J:</span><strong>{p.youden_j.toFixed(4)}</strong></div>
+                  </div>
+                  <button className="preset-btn" onClick={() => selectPreset(p)}>
+                    {activePresetId === p.id ? "✓ Currently Selected" : "Load Preset"}
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="studio-row">
+            <div className="card">
+              <div className="card-title">
+                <div>
+                  <label>INTERACTIVE TUNER</label>
+                  <h2>Formula Weights & Decision Thresholds</h2>
+                </div>
+              </div>
+
+              <div className="slider-block">
+                <div className="slider-label-row">
+                  <span>α — Peak Family Instability max_k(IR_k)</span>
+                  <span className="slider-val">{alpha.toFixed(2)}</span>
+                </div>
+                <input
+                  type="range" min="0" max="1" step="0.05"
+                  value={alpha} onChange={(e) => { setAlpha(Number(e.target.value)); setActivePresetId("custom"); }}
+                  className="calib-slider"
+                />
+                <span className="slider-hint">Weight attributed to the single most degraded metamorphic family.</span>
+              </div>
+
+              <div className="slider-block">
+                <div className="slider-label-row">
+                  <span>β — Cross-Family Spread Score (CFS)</span>
+                  <span className="slider-val">{beta.toFixed(2)}</span>
+                </div>
+                <input
+                  type="range" min="0" max="1" step="0.05"
+                  value={beta} onChange={(e) => { setBeta(Number(e.target.value)); setActivePresetId("custom"); }}
+                  className="calib-slider"
+                />
+                <span className="slider-hint">Fraction of semantic families exceeding the τ_fam threshold.</span>
+              </div>
+
+              <div className="slider-block">
+                <div className="slider-label-row">
+                  <span>γ — Baseline Uncertainty (1 − c₀)</span>
+                  <span className="slider-val">{gamma.toFixed(2)}</span>
+                </div>
+                <input
+                  type="range" min="0" max="1" step="0.05"
+                  value={gamma} onChange={(e) => { setGamma(Number(e.target.value)); setActivePresetId("custom"); }}
+                  className="calib-slider"
+                />
+                <span className="slider-hint">Inverted softmax confidence margin of the original unperturbed prediction.</span>
+              </div>
+
+              {(() => {
+                const wSum = Number((alpha + beta + gamma).toFixed(2));
+                const isOk = Math.abs(wSum - 1.0) <= 0.015;
+                return (
+                  <div className={`weight-sum-alert ${isOk ? "ok" : "warn"}`}>
+                    <span>Total Weight Sum: <b>{wSum.toFixed(2)}</b> / 1.00 {isOk ? "(Valid constraint)" : "(Must sum to 1.00)"}</span>
+                    {!isOk && <button className="small-btn" onClick={autoNormalizeWeights}>Auto-Normalize</button>}
+                  </div>
+                );
+              })()}
+
+              <hr style={{ borderColor: "#29253a", margin: "16px 0" }} />
+
+              <div className="slider-block">
+                <div className="slider-label-row">
+                  <span>τ_fam — Family Compromise Threshold</span>
+                  <span className="slider-val">{tauFam.toFixed(2)}</span>
+                </div>
+                <input
+                  type="range" min="0.05" max="0.50" step="0.05"
+                  value={tauFam} onChange={(e) => { setTauFam(Number(e.target.value)); setActivePresetId("custom"); }}
+                  className="calib-slider"
+                />
+                <span className="slider-hint">Individual family IR_k must exceed τ_fam to count toward cross-family spread.</span>
+              </div>
+
+              <div className="slider-block">
+                <div className="slider-label-row">
+                  <span>θ_trip — Tripped / OPEN Threshold</span>
+                  <span className="slider-val">{thetaTrip.toFixed(2)}</span>
+                </div>
+                <input
+                  type="range" min="0.10" max="0.90" step="0.05"
+                  value={thetaTrip} onChange={(e) => { handleThetaTripChange(e.target.value); setActivePresetId("custom"); }}
+                  className="calib-slider"
+                />
+                <span className="slider-hint">CBI ≥ θ_trip trips the breaker, intercepts perception, and requests safety response.</span>
+              </div>
+
+              <div className="slider-block">
+                <div className="slider-label-row">
+                  <span>θ_warn — Monitor / HALF-OPEN Threshold</span>
+                  <span className="slider-val">{thetaWarn.toFixed(3)}</span>
+                </div>
+                <input
+                  type="range" min="0.05" max="0.50" step="0.025"
+                  value={thetaWarn}
+                  disabled={autoDeriveWarn}
+                  onChange={(e) => { setThetaWarn(Number(e.target.value)); setAutoDeriveWarn(false); setActivePresetId("custom"); }}
+                  className="calib-slider"
+                />
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 4 }}>
+                  <label style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: 12, cursor: "pointer", color: "#a5a0b7" }}>
+                    <input
+                      type="checkbox" checked={autoDeriveWarn}
+                      onChange={(e) => {
+                        setAutoDeriveWarn(e.target.checked);
+                        if (e.target.checked) setThetaWarn(Number((0.5 * thetaTrip).toFixed(3)));
+                      }}
+                    />
+                    Auto-derive θ_warn = 0.5 × θ_trip (Section 3.4 rule)
+                  </label>
+                  {thetaWarn >= thetaTrip && <span style={{ color: "#ff7188", fontSize: 11 }}>θ_warn must be &lt; θ_trip!</span>}
+                </div>
+              </div>
+
+              <div className="actions-bar">
+                <button
+                  className="primary"
+                  disabled={calibSaving || Math.abs((alpha + beta + gamma) - 1.0) > 0.015 || thetaWarn >= thetaTrip}
+                  onClick={applyCalibration}
+                >
+                  {calibSaving ? "Applying parameters..." : "Apply to Live Circuit Breaker"}
+                </button>
+              </div>
+              {calibMsg && <div className="calib-msg">{calibMsg}</div>}
+            </div>
+
+            <div className="card">
+              <div className="card-title">
+                <div>
+                  <label>STATE MACHINE & SIMULATOR</label>
+                  <h2>Live Formula & Scenario Testing</h2>
+                </div>
+              </div>
+
+              <div className="formula" style={{ marginBottom: 16 }}>
+                <b>Active CBI Formula:</b>
+                <br />
+                CBI(x) = {alpha.toFixed(2)} · max_k IR_k  +  {beta.toFixed(2)} · CFS  +  {gamma.toFixed(2)} · (1 − c₀)
+                <br /><br />
+                <b>Decision Boundaries:</b>
+                <br />
+                CLOSED    if CBI &lt; {thetaWarn.toFixed(3)} (Auto-Approved)
+                <br />
+                HALF-OPEN if {thetaWarn.toFixed(3)} ≤ CBI &lt; {thetaTrip.toFixed(2)} (Warning Monitor)
+                <br />
+                OPEN      if CBI ≥ {thetaTrip.toFixed(2)} (Trip Intercept)
+              </div>
+
+              <div style={{ padding: "16px", background: "#100e18", border: "1px solid #29253a", borderRadius: "10px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+                  <label style={{ margin: 0 }}>HYPOTHETICAL INPUT SIMULATOR</label>
+                  <span className="muted">Test state machine transitions</span>
+                </div>
+
+                <div className="slider-block" style={{ marginBottom: 10 }}>
+                  <div className="slider-label-row">
+                    <span style={{ fontSize: 12 }}>Simulated max_k IR_k</span>
+                    <span className="slider-val">{simIr.toFixed(2)}</span>
+                  </div>
+                  <input
+                    type="range" min="0" max="1" step="0.05"
+                    value={simIr} onChange={(e) => setSimIr(Number(e.target.value))}
+                    className="calib-slider"
+                  />
+                </div>
+
+                <div className="slider-block" style={{ marginBottom: 10 }}>
+                  <div className="slider-label-row">
+                    <span style={{ fontSize: 12 }}>Simulated CFS</span>
+                    <span className="slider-val">{simCfs.toFixed(2)}</span>
+                  </div>
+                  <input
+                    type="range" min="0" max="1" step="0.3333"
+                    value={simCfs} onChange={(e) => setSimCfs(Number(e.target.value))}
+                    className="calib-slider"
+                  />
+                </div>
+
+                <div className="slider-block" style={{ marginBottom: 10 }}>
+                  <div className="slider-label-row">
+                    <span style={{ fontSize: 12 }}>Simulated Uncertainty (1 − c₀)</span>
+                    <span className="slider-val">{simUnc.toFixed(2)}</span>
+                  </div>
+                  <input
+                    type="range" min="0" max="1" step="0.05"
+                    value={simUnc} onChange={(e) => setSimUnc(Number(e.target.value))}
+                    className="calib-slider"
+                  />
+                </div>
+
+                {(() => {
+                  const sCbi = Number((alpha * simIr + beta * simCfs + gamma * simUnc).toFixed(4));
+                  const sTone = sCbi < thetaWarn ? "closed" : sCbi < thetaTrip ? "half" : "open";
+                  const sState = sCbi < thetaWarn ? "CLOSED (Normal Operation)" : sCbi < thetaTrip ? "HALF-OPEN (Warning Flag)" : "OPEN (Safety Intercept)";
+                  return (
+                    <div>
+                      <div className="gauge">
+                        <div className="gauge-track">
+                          <span className="zone green" style={{ width: `${Math.min(100, thetaWarn * 100)}%` }} />
+                          <span className="zone yellow" style={{ width: `${Math.min(100, (thetaTrip - thetaWarn) * 100)}%` }} />
+                          <span className="zone red" style={{ width: `${Math.max(0, (1 - thetaTrip) * 100)}%` }} />
+                          <i style={{ left: `${Math.min(100, Math.max(0, sCbi * 100))}%` }} />
+                        </div>
+                        <div className="gauge-labels">
+                          <span>0</span>
+                          <span>θ_warn {thetaWarn.toFixed(2)}</span>
+                          <span>θ_trip {thetaTrip.toFixed(2)}</span>
+                          <span>1.0</span>
+                        </div>
+                      </div>
+                      <div className={`sim-result state-banner ${sTone}`} style={{ margin: "10px 0 0" }}>
+                        <div>Simulated CBI = <strong>{sCbi.toFixed(4)}</strong> → <b>{sState}</b></div>
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            </div>
+          </div>
+
+          <div className="card">
+            <div className="card-title">
+              <div>
+                <label>EXPERIMENTAL AUDIT & RESEARCH VISUALS</label>
+                <h2>Standardized v4 Validation Results</h2>
+              </div>
+              <span className="muted">Device: Intel CPU · Held-Out Pool N=11,763</span>
+            </div>
+
+            <div className="chart-pills">
+              {calibData?.charts && calibData.charts.map((c) => (
+                <button
+                  key={c.id}
+                  className={`chart-pill ${activeChart === c.id ? "active" : ""}`}
+                  onClick={() => setActiveChart(c.id)}
+                >
+                  {c.title}
+                </button>
+              ))}
+            </div>
+
+            {calibData?.charts && (() => {
+              const cur = calibData.charts.find((c) => c.id === activeChart) || calibData.charts[0];
+              return (
+                <div className="chart-display">
+                  <img
+                    src={`${API}/api/calibration/chart/${cur.filename}`}
+                    alt={cur.title}
+                    className="chart-img"
+                  />
+                  <div className="chart-desc">
+                    <strong>{cur.title}:</strong> {cur.desc}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+
+          {calibData?.grid_points && calibData.grid_points.length > 0 && (
+            <div className="card">
+              <div className="card-title">
+                <div>
+                  <label>PARTITION A GRID SEARCH</label>
+                  <h2>Top 25 Calibrated Operating Points (Sorted by Youden's J)</h2>
+                </div>
+                <span className="muted">Click "Load" to test any point</span>
+              </div>
+              <div className="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Action</th>
+                      <th>τ_fam</th>
+                      <th>θ_trip</th>
+                      <th>θ_warn</th>
+                      <th>Recall</th>
+                      <th>FAR</th>
+                      <th>Youden's J</th>
+                      <th>Precision</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {calibData.grid_points.map((pt, idx) => (
+                      <tr key={idx}>
+                        <td>
+                          <button
+                            className="load-btn"
+                            onClick={() => {
+                              setTauFam(pt.tau_fam);
+                              setThetaTrip(pt.theta_trip);
+                              setThetaWarn(pt.theta_warn);
+                              setActivePresetId("custom");
+                              setCalibMsg(`Loaded grid point: τ=${pt.tau_fam}, θ=${pt.theta_trip}`);
+                            }}
+                          >
+                            Load
+                          </button>
+                        </td>
+                        <td>{pt.tau_fam.toFixed(2)}</td>
+                        <td>{pt.theta_trip.toFixed(2)}</td>
+                        <td>{pt.theta_warn.toFixed(3)}</td>
+                        <td>{(pt.recall * 100).toFixed(2)}%</td>
+                        <td>{(pt.far * 100).toFixed(2)}%</td>
+                        <td><b style={{ color: "#7ee7bf" }}>{pt.youden_j.toFixed(4)}</b></td>
+                        <td>{(pt.precision * 100).toFixed(2)}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </section>
       )}
 

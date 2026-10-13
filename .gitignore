@@ -95,3 +95,5 @@ diagrams/
 *.out
 *.fls
 *.fdb_latexmk
+ 
+node_modules/ 

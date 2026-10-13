@@ -1,0 +1,45 @@
+{
+  "mcb_op_j": {
+    "tau_fam": 0.05,
+    "theta_trip": 0.3,
+    "theta_warn": 0.15
+  },
+  "mcb_op_far10": {
+    "tau_fam": 0.1,
+    "theta_trip": 0.25,
+    "theta_warn": 0.125
+  },
+  "mcb_prior_default": {
+    "tau_fam": 0.35,
+    "theta_trip": 0.55,
+    "theta_warn": 0.275
+  },
+  "baselines": {
+    "softmax_entropy": {
+      "op_j": 0.9575568003307483,
+      "op_far10": 1.421182810103069
+    },
+    "msp": {
+      "op_j": 0.2766885990370251,
+      "op_far10": 0.31889226740013377
+    },
+    "tta_var": {
+      "op_j": 0.09765873209834301,
+      "op_far10": 0.09765873209834301
+    },
+    "ff": {
+      "op_j": 0.10170340681362726,
+      "op_far10": 0.10170340681362726
+    },
+    "mcdo": {
+      "op_j": 1.0496573104468996,
+      "op_far10": 1.6004428698089652
+    },
+    "entropy_ts": {
+      "op_j": 0.15523356128377516,
+      "op_far10": 0.3201024464153562
+    }
+  },
+  "temperature_T": 0.5819,
+  "grid_optimum_on_boundary": true
+}

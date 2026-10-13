@@ -1,11 +1,14 @@
 """FastAPI API for the additive vehicle fallback demonstration."""
 from __future__ import annotations
 import base64, io, json
-from typing import Set
+from pathlib import Path
+from typing import Set, Optional, List, Dict, Any
 from fastapi import FastAPI, File, HTTPException, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from pydantic import BaseModel
 from PIL import Image
-from src.circuit_breaker import MetamorphicCircuitBreaker
+from src.circuit_breaker import MetamorphicCircuitBreaker, CircuitBreakerConfig
 from src.models.mobilenet_adapter import MobileNetAdapter
 from src.gradcam import overlay_heatmap_on_image
 from fallback.controller import decision_to_dict
@@ -104,6 +107,175 @@ async def takeover_status() -> dict:
 async def acknowledge_takeover() -> dict:
     system.acknowledge_takeover()
     return {"status":"acknowledged"}
+
+RESULTS_DIR = Path(__file__).resolve().parent.parent / "mcb_experiments" / "results_v4"
+
+class CalibrationUpdateRequest(BaseModel):
+    alpha: float = 0.50
+    beta: float = 0.35
+    gamma: float = 0.15
+    tau_fam: float = 0.05
+    theta_trip: float = 0.30
+    theta_warn: Optional[float] = None
+
+@app.get("/api/calibration")
+def get_calibration() -> dict:
+    active = {
+        "alpha": round(float(existing_cb.config.alpha), 3),
+        "beta": round(float(existing_cb.config.beta), 3),
+        "gamma": round(float(existing_cb.config.gamma), 3),
+        "tau_fam": round(float(existing_cb.config.tau_fam), 3),
+        "theta_trip": round(float(existing_cb.config.theta_trip), 4),
+        "theta_warn": round(float(existing_cb.config.theta_warn), 4),
+    }
+
+    presets = {
+        "op_j": {
+            "id": "op_j",
+            "name": "Optimal Youden's J (mcb_op_j)",
+            "badge": "Maximum Balanced Detection",
+            "tau_fam": 0.05,
+            "theta_trip": 0.30,
+            "theta_warn": 0.150,
+            "alpha": 0.50,
+            "beta": 0.35,
+            "gamma": 0.15,
+            "recall": 0.8416,
+            "far": 0.1274,
+            "youden_j": 0.7143,
+            "description": "Selected on Partition A grid sweep. Maximizes J = Recall - FAR (84.2% recall at 12.7% FAR)."
+        },
+        "op_far10": {
+            "id": "op_far10",
+            "name": "High-Precision Safety (mcb_op_far10)",
+            "badge": "Strict Alert Fatigue Limit (FAR <= 10%)",
+            "tau_fam": 0.10,
+            "theta_trip": 0.25,
+            "theta_warn": 0.125,
+            "alpha": 0.50,
+            "beta": 0.35,
+            "gamma": 0.15,
+            "recall": 0.7828,
+            "far": 0.0936,
+            "youden_j": 0.6892,
+            "description": "Enforces strict false alarm bound <= 10% (78.3% recall at 9.4% FAR on Partition B)."
+        },
+        "prior_default": {
+            "id": "prior_default",
+            "name": "Legacy Heuristic (v3 Default)",
+            "badge": "Prior Heuristic",
+            "tau_fam": 0.35,
+            "theta_trip": 0.55,
+            "theta_warn": 0.275,
+            "alpha": 0.50,
+            "beta": 0.35,
+            "gamma": 0.15,
+            "recall": 0.2851,
+            "far": 0.0032,
+            "youden_j": 0.2819,
+            "description": "Pre-v4 heuristic settings. Ultra-conservative FAR (0.32%) but misses 71.5% of model errors."
+        }
+    }
+
+    grid_points = []
+    grid_csv = RESULTS_DIR / "grid_search_A.csv"
+    if grid_csv.exists():
+        try:
+            import pandas as pd
+            gdf = pd.read_csv(grid_csv)
+            gdf = gdf.sort_values(by="youden_j", ascending=False).head(25)
+            for _, r in gdf.iterrows():
+                grid_points.append({
+                    "tau_fam": round(float(r["tau_fam"]), 2),
+                    "theta_trip": round(float(r["theta_trip"]), 2),
+                    "theta_warn": round(float(r["theta_warn"]), 3),
+                    "recall": round(float(r["recall"]), 4),
+                    "far": round(float(r["far"]), 4),
+                    "youden_j": round(float(r["youden_j"]), 4),
+                    "precision": round(float(r["precision"]), 4),
+                })
+        except Exception:
+            pass
+
+    charts = [
+        {"id": "calibration_heatmap", "title": "Grid Search Heatmap", "filename": "calibration_heatmap.png", "desc": "Youden's J across (tau, theta) grid on Partition A"},
+        {"id": "roc_curves", "title": "ROC Curves", "filename": "roc_curves.png", "desc": "Partition B ROC curves comparing MCB vs all 10 baselines"},
+        {"id": "risk_coverage", "title": "Risk-Coverage Tradeoff", "filename": "risk_coverage.png", "desc": "Residual risk as coverage increases on Partition B"},
+        {"id": "family_radar", "title": "Family Vulnerability Radar", "filename": "family_radar.png", "desc": "Metamorphic instability profile across geometric, photometric, and noise"},
+        {"id": "latency_breakdown", "title": "Latency Breakdown", "filename": "latency_breakdown.png", "desc": "Component runtime breakdown on Intel CPU"},
+        {"id": "fault_attribution", "title": "Fault Attribution Matrix", "filename": "fault_attribution_confusion.png", "desc": "Attribution confusion matrix under unseen fault injections"},
+    ]
+
+    return {
+        "active_config": active,
+        "presets": presets,
+        "grid_points": grid_points,
+        "charts": charts,
+    }
+
+@app.post("/api/calibration/update")
+async def update_calibration(req: CalibrationUpdateRequest) -> dict:
+    total_weights = req.alpha + req.beta + req.gamma
+    if abs(total_weights - 1.0) > 0.015:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Weights must sum to 1.0 (got alpha={req.alpha}, beta={req.beta}, gamma={req.gamma}, sum={total_weights:.3f})"
+        )
+
+    t_trip = req.theta_trip
+    t_warn = req.theta_warn if req.theta_warn is not None else round(0.5 * t_trip, 4)
+    if t_warn >= t_trip:
+        raise HTTPException(
+            status_code=400,
+            detail=f"theta_warn ({t_warn}) must be strictly less than theta_trip ({t_trip})"
+        )
+
+    try:
+        new_config = CircuitBreakerConfig(
+            alpha=round(req.alpha, 4),
+            beta=round(req.beta, 4),
+            gamma=round(req.gamma, 4),
+            tau_fam=round(req.tau_fam, 4),
+            theta_trip=round(t_trip, 4),
+            theta_warn=round(t_warn, 4),
+        )
+        existing_cb.config = new_config
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+    payload = {
+        "type": "config_updated",
+        "active_config": {
+            "alpha": new_config.alpha,
+            "beta": new_config.beta,
+            "gamma": new_config.gamma,
+            "tau_fam": new_config.tau_fam,
+            "theta_trip": new_config.theta_trip,
+            "theta_warn": new_config.theta_warn,
+        }
+    }
+    await _broadcast(payload)
+    return {"status": "ok", "active_config": payload["active_config"]}
+
+@app.get("/api/calibration/chart/{chart_name}")
+def get_calibration_chart(chart_name: str):
+    allowed = {
+        "calibration_heatmap.png",
+        "roc_curves.png",
+        "risk_coverage.png",
+        "family_radar.png",
+        "latency_breakdown.png",
+        "fault_attribution_confusion.png"
+    }
+    fname = chart_name if chart_name.endswith(".png") else f"{chart_name}.png"
+    if fname not in allowed:
+        raise HTTPException(status_code=404, detail="Chart not found")
+
+    chart_file = RESULTS_DIR / fname
+    if not chart_file.exists():
+        raise HTTPException(status_code=404, detail=f"File {fname} not found in results directory")
+
+    return FileResponse(chart_file, media_type="image/png")
 
 @app.websocket("/ws/fallback")
 async def fallback_websocket(websocket: WebSocket) -> None:

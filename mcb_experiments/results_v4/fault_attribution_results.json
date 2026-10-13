@@ -1,0 +1,85 @@
+{
+  "n_per_family": 100,
+  "n_control": 100,
+  "trip_rates": {
+    "geometric": 0.14,
+    "photometric": 0.22,
+    "sensor_noise": 0.54
+  },
+  "control_trip_rate": 0.15,
+  "confusion_matrix": {
+    "geometric": {
+      "geometric": 20,
+      "photometric": 34,
+      "sensor_noise": 35,
+      "unattributable": 11
+    },
+    "photometric": {
+      "geometric": 23,
+      "photometric": 35,
+      "sensor_noise": 25,
+      "unattributable": 17
+    },
+    "sensor_noise": {
+      "geometric": 40,
+      "photometric": 25,
+      "sensor_noise": 20,
+      "unattributable": 15
+    }
+  },
+  "accuracy_all": 0.25,
+  "accuracy_ci95": [
+    0.20436911491211526,
+    0.30195260008675257
+  ],
+  "accuracy_tripped_only": 0.26666666666666666,
+  "accuracy_tripped_ci95": [
+    0.18623692042961365,
+    0.3662003781671706
+  ],
+  "binomial_p_vs_chance": 0.9993013315728605,
+  "decision_rule_D4": "NOT MET",
+  "family_accuracies": {
+    "geometric": {
+      "accuracy": 0.2,
+      "ci95": [
+        0.1333659225590988,
+        0.28883096192650237
+      ]
+    },
+    "photometric": {
+      "accuracy": 0.35,
+      "ci95": [
+        0.2636410465347802,
+        0.4474573957080203
+      ]
+    },
+    "sensor_noise": {
+      "accuracy": 0.2,
+      "ci95": [
+        0.1333659225590988,
+        0.28883096192650237
+      ]
+    }
+  },
+  "family_lift": {
+    "geometric": {
+      "mean_ir_injected": 0.021929824561403508,
+      "mean_ir_control": 0.02298245614035088,
+      "lift": -0.001052631578947371,
+      "cross_contamination_rate": 0.87
+    },
+    "photometric": {
+      "mean_ir_injected": 0.01912280701754386,
+      "mean_ir_control": 0.0112280701754386,
+      "lift": 0.00789473684210526,
+      "cross_contamination_rate": 0.82
+    },
+    "sensor_noise": {
+      "mean_ir_injected": 0.28456140350877196,
+      "mean_ir_control": 0.09877192982456139,
+      "lift": 0.18578947368421056,
+      "cross_contamination_rate": 0.59
+    }
+  }
+}
