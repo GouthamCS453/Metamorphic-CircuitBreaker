@@ -23,5 +23,9 @@ tqdm>=4.65.0
 # ─── Streamlit Dashboard ──────────────────────────────────────────────────────
 streamlit>=1.28.0
 
+# ─── Testing & Quality Assurance ──────────────────────────────────────────────
+pytest>=7.0.0
+
 # ─── Optional: Kaggle download helper ────────────────────────────────────────
 # kaggle>=1.5.16
+

@@ -1,4 +1,6 @@
-﻿# Metamorphic Circuit Breaker Framework
+# Metamorphic Circuit Breaker Framework
+
+[![CI/CD Pipeline](https://github.com/GouthamCS453/Metamorphic-CircuitBreaker/actions/workflows/ci.yml/badge.svg)](https://github.com/GouthamCS453/Metamorphic-CircuitBreaker/actions/workflows/ci.yml)
 
 > **Runtime Transform-Brittleness Detection and Explainability for Medical Vision Models**  
 > Applied to ISIC 2019 Skin Lesion Classification with ConvNeXt-Base

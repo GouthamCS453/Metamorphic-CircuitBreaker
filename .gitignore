@@ -48,17 +48,18 @@ outputs/
 # Allow Phase 2 methodology markdown to be tracked
 !Phase2_Methodology_and_Architecture.md
 
-# ── Testing Suites & Experiments (Ignore all except mcb_portable) ──────────────
+# ── Testing Suites & Experiments (Ignore all except mcb_portable and unit tests) ──────────────
 mcb_experiments/
 new_test/
 member_results/
 results_v4/
 New_Scripts_Ideal/
-tests/
+!tests/
+!tests/*.py
+tests/__pycache__/
 test/
 random_gradcam.py
 run_phase1.py
-test_*.py
 scripts/test_*.py
 
 # Ensure mcb_portable is explicitly tracked
