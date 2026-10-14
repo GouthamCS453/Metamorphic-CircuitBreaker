@@ -1,0 +1,465 @@
+{
+  "schema_version": "1.0",
+  "test_id": "E_family",
+  "title": "Test E - Family & Transform Vulnerability Profile",
+  "run_id": "convnext-base__isic2019",
+  "model": "ConvNeXt-Base",
+  "dataset": "ISIC2019",
+  "status": "ok",
+  "generated": "2026-10-12T01:36:02",
+  "warnings": [],
+  "results": {
+    "n": 749,
+    "n_errors": 132,
+    "family_profile": {
+      "flip": {
+        "geometric": {
+          "mean_all": 0.047089686833907206,
+          "mean_correct": 0.023543461571270154,
+          "mean_error": 0.15715045188729398,
+          "frac_nonzero": 0.1068090787716956,
+          "auroc_error_detection": 0.6101861401699327,
+          "auroc_ci": [
+            0.5719850449388536,
+            0.6516611107018319
+          ]
+        },
+        "photometric": {
+          "mean_all": 0.048389665753167964,
+          "mean_correct": 0.03097330034973983,
+          "mean_error": 0.1297979797979798,
+          "frac_nonzero": 0.15620827770360482,
+          "auroc_error_detection": 0.6383772899169982,
+          "auroc_ci": [
+            0.5956709518196552,
+            0.6848837851775453
+          ]
+        },
+        "sensor_noise": {
+          "mean_all": 0.053280397254819284,
+          "mean_correct": 0.040982114930762883,
+          "mean_error": 0.11076555023923444,
+          "frac_nonzero": 0.19893190921228304,
+          "auroc_error_detection": 0.5867958351750896,
+          "auroc_ci": [
+            0.5454088085064583,
+            0.6289672965473209
+          ]
+        }
+      },
+      "drift": {
+        "geometric": {
+          "mean_all": 0.022704078784608662,
+          "mean_correct": 0.019005242911809855,
+          "mean_error": 0.039993334341554616,
+          "frac_nonzero": 0.910547396528705,
+          "auroc_error_detection": 0.7137051225381857,
+          "auroc_ci": [
+            0.665407979716124,
+            0.7611681032365797
+          ]
+        },
+        "photometric": {
+          "mean_all": 0.026258258848493768,
+          "mean_correct": 0.02461888559802194,
+          "mean_error": 0.03392108684501738,
+          "frac_nonzero": 0.9759679572763685,
+          "auroc_error_detection": 0.607245469279505,
+          "auroc_ci": [
+            0.5515024127007514,
+            0.654961998428368
+          ]
+        },
+        "sensor_noise": {
+          "mean_all": 0.027759864513609574,
+          "mean_correct": 0.026848795391921518,
+          "mean_error": 0.032018422453621166,
+          "frac_nonzero": 0.9038718291054739,
+          "auroc_error_detection": 0.5623188939639507,
+          "auroc_ci": [
+            0.5019194170227395,
+            0.6153191149747066
+          ]
+        }
+      }
+    },
+    "per_transform": [
+      {
+        "id": "GEOM_ROT_MILD",
+        "family": "geometric",
+        "type": "rotation",
+        "severity": "mild",
+        "flip_rate_error": 0.09848484848484848,
+        "flip_rate_correct": 0.011345218800648298,
+        "difference": 0.08713962968420018
+      },
+      {
+        "id": "GEOM_ROT_MOD",
+        "family": "geometric",
+        "type": "rotation",
+        "severity": "moderate",
+        "flip_rate_error": 0.09848484848484848,
+        "flip_rate_correct": 0.017828200972447326,
+        "difference": 0.08065664751240115
+      },
+      {
+        "id": "GEOM_ROT_SEV",
+        "family": "geometric",
+        "type": "rotation",
+        "severity": "severe",
+        "flip_rate_error": 0.07575757575757576,
+        "flip_rate_correct": 0.027552674230145867,
+        "difference": 0.04820490152742989
+      },
+      {
+        "id": "GEOM_SCALE_MILD",
+        "family": "geometric",
+        "type": "scale",
+        "severity": "mild",
+        "flip_rate_error": 0.08333333333333333,
+        "flip_rate_correct": 0.012965964343598054,
+        "difference": 0.07036736898973528
+      },
+      {
+        "id": "GEOM_SCALE_MOD",
+        "family": "geometric",
+        "type": "scale",
+        "severity": "moderate",
+        "flip_rate_error": 0.12121212121212122,
+        "flip_rate_correct": 0.017828200972447326,
+        "difference": 0.10338392023967388
+      },
+      {
+        "id": "GEOM_SCALE_SEV",
+        "family": "geometric",
+        "type": "scale",
+        "severity": "severe",
+        "flip_rate_error": 0.16666666666666666,
+        "flip_rate_correct": 0.027552674230145867,
+        "difference": 0.13911399243652078
+      },
+      {
+        "id": "GEOM_FLIP_MOD",
+        "family": "geometric",
+        "type": "flip",
+        "severity": "moderate",
+        "flip_rate_error": 0.16666666666666666,
+        "flip_rate_correct": 0.019448946515397084,
+        "difference": 0.14721772015126958
+      },
+      {
+        "id": "PHOTO_BRIGHT_MILD",
+        "family": "photometric",
+        "type": "brightness",
+        "severity": "mild",
+        "flip_rate_error": 0.03787878787878788,
+        "flip_rate_correct": 0.006482982171799027,
+        "difference": 0.031395805706988855
+      },
+      {
+        "id": "PHOTO_BRIGHT_MOD",
+        "family": "photometric",
+        "type": "brightness",
+        "severity": "moderate",
+        "flip_rate_error": 0.12121212121212122,
+        "flip_rate_correct": 0.029173419773095625,
+        "difference": 0.0920387014390256
+      },
+      {
+        "id": "PHOTO_BRIGHT_SEV",
+        "family": "photometric",
+        "type": "brightness",
+        "severity": "severe",
+        "flip_rate_error": 0.1590909090909091,
+        "flip_rate_correct": 0.05186385737439222,
+        "difference": 0.10722705171651686
+      },
+      {
+        "id": "PHOTO_CONTRAST_MILD",
+        "family": "photometric",
+        "type": "contrast",
+        "severity": "mild",
+        "flip_rate_error": 0.05303030303030303,
+        "flip_rate_correct": 0.006482982171799027,
+        "difference": 0.04654732085850401
+      },
+      {
+        "id": "PHOTO_CONTRAST_MOD",
+        "family": "photometric",
+        "type": "contrast",
+        "severity": "moderate",
+        "flip_rate_error": 0.12121212121212122,
+        "flip_rate_correct": 0.014586709886547812,
+        "difference": 0.1066254113255734
+      },
+      {
+        "id": "PHOTO_CONTRAST_SEV",
+        "family": "photometric",
+        "type": "contrast",
+        "severity": "severe",
+        "flip_rate_error": 0.17424242424242425,
+        "flip_rate_correct": 0.019448946515397084,
+        "difference": 0.15479347772702717
+      },
+      {
+        "id": "PHOTO_SAT_MILD",
+        "family": "photometric",
+        "type": "saturation",
+        "severity": "mild",
+        "flip_rate_error": 0.07575757575757576,
+        "flip_rate_correct": 0.02593192868719611,
+        "difference": 0.04982564707037965
+      },
+      {
+        "id": "PHOTO_SAT_MOD",
+        "family": "photometric",
+        "type": "saturation",
+        "severity": "moderate",
+        "flip_rate_error": 0.1590909090909091,
+        "flip_rate_correct": 0.04213938411669368,
+        "difference": 0.1169515249742154
+      },
+      {
+        "id": "PHOTO_SAT_SEV",
+        "family": "photometric",
+        "type": "saturation",
+        "severity": "severe",
+        "flip_rate_error": 0.18181818181818182,
+        "flip_rate_correct": 0.05672609400324149,
+        "difference": 0.12509208781494033
+      },
+      {
+        "id": "NOISE_BLUR_MILD",
+        "family": "sensor_noise",
+        "type": "blur",
+        "severity": "mild",
+        "flip_rate_error": 0.045454545454545456,
+        "flip_rate_correct": 0.004862236628849271,
+        "difference": 0.040592308825696186
+      },
+      {
+        "id": "NOISE_BLUR_MOD",
+        "family": "sensor_noise",
+        "type": "blur",
+        "severity": "moderate",
+        "flip_rate_error": 0.09090909090909091,
+        "flip_rate_correct": 0.027552674230145867,
+        "difference": 0.06335641667894504
+      },
+      {
+        "id": "NOISE_BLUR_SEV",
+        "family": "sensor_noise",
+        "type": "blur",
+        "severity": "severe",
+        "flip_rate_error": 0.19696969696969696,
+        "flip_rate_correct": 0.050243111831442464,
+        "difference": 0.14672658513825448
+      },
+      {
+        "id": "NOISE_GAUSS_MILD",
+        "family": "sensor_noise",
+        "type": "noise",
+        "severity": "mild",
+        "flip_rate_error": 0.06060606060606061,
+        "flip_rate_correct": 0.022690437601296597,
+        "difference": 0.03791562300476401
+      },
+      {
+        "id": "NOISE_GAUSS_MOD",
+        "family": "sensor_noise",
+        "type": "noise",
+        "severity": "moderate",
+        "flip_rate_error": 0.15151515151515152,
+        "flip_rate_correct": 0.0713128038897893,
+        "difference": 0.08020234762536221
+      },
+      {
+        "id": "NOISE_GAUSS_SEV",
+        "family": "sensor_noise",
+        "type": "noise",
+        "severity": "severe",
+        "flip_rate_error": 0.2196969696969697,
+        "flip_rate_correct": 0.14748784440842788,
+        "difference": 0.07220912528854181
+      },
+      {
+        "id": "NOISE_JPEG_MILD",
+        "family": "sensor_noise",
+        "type": "jpeg",
+        "severity": "mild",
+        "flip_rate_error": 0.05303030303030303,
+        "flip_rate_correct": 0.008103727714748784,
+        "difference": 0.044926575315554246
+      },
+      {
+        "id": "NOISE_JPEG_MOD",
+        "family": "sensor_noise",
+        "type": "jpeg",
+        "severity": "moderate",
+        "flip_rate_error": 0.06818181818181818,
+        "flip_rate_correct": 0.02106969205834684,
+        "difference": 0.047112126123471335
+      },
+      {
+        "id": "NOISE_JPEG_SEV",
+        "family": "sensor_noise",
+        "type": "jpeg",
+        "severity": "severe",
+        "flip_rate_error": 0.11363636363636363,
+        "flip_rate_correct": 0.03565640194489465,
+        "difference": 0.07797996169146898
+      }
+    ],
+    "per_type": [
+      {
+        "family": "geometric",
+        "type": "rotation",
+        "flip_rate_error": 0.0909090909090909,
+        "flip_rate_correct": 0.0189086980010805
+      },
+      {
+        "family": "geometric",
+        "type": "scale",
+        "flip_rate_error": 0.12373737373737374,
+        "flip_rate_correct": 0.019448946515397084
+      },
+      {
+        "family": "geometric",
+        "type": "flip",
+        "flip_rate_error": 0.16666666666666666,
+        "flip_rate_correct": 0.019448946515397084
+      },
+      {
+        "family": "photometric",
+        "type": "brightness",
+        "flip_rate_error": 0.10606060606060606,
+        "flip_rate_correct": 0.02917341977309562
+      },
+      {
+        "family": "photometric",
+        "type": "contrast",
+        "flip_rate_error": 0.11616161616161617,
+        "flip_rate_correct": 0.01350621285791464
+      },
+      {
+        "family": "photometric",
+        "type": "saturation",
+        "flip_rate_error": 0.1388888888888889,
+        "flip_rate_correct": 0.041599135602377095
+      },
+      {
+        "family": "sensor_noise",
+        "type": "blur",
+        "flip_rate_error": 0.1111111111111111,
+        "flip_rate_correct": 0.027552674230145863
+      },
+      {
+        "family": "sensor_noise",
+        "type": "noise",
+        "flip_rate_error": 0.14393939393939395,
+        "flip_rate_correct": 0.08049702863317126
+      },
+      {
+        "family": "sensor_noise",
+        "type": "jpeg",
+        "flip_rate_error": 0.07828282828282829,
+        "flip_rate_correct": 0.021609940572663425
+      }
+    ],
+    "per_class": [
+      {
+        "cls": "MEL",
+        "n": 134,
+        "error_rate": 0.34328358208955223,
+        "ir_geometric": 0.07677402461377325,
+        "ir_photometric": 0.07795234354543074,
+        "ir_sensor_noise": 0.08538884524744698
+      },
+      {
+        "cls": "NV",
+        "n": 381,
+        "error_rate": 0.05511811023622047,
+        "ir_geometric": 0.013749597089837454,
+        "ir_photometric": 0.01763595340056177,
+        "ir_sensor_noise": 0.01509877054841829
+      },
+      {
+        "cls": "BCC",
+        "n": 99,
+        "error_rate": 0.10101010101010101,
+        "ir_geometric": 0.06163388268651426,
+        "ir_photometric": 0.06104908736487684,
+        "ir_sensor_noise": 0.09404572036150982
+      },
+      {
+        "cls": "AK",
+        "n": 25,
+        "error_rate": 0.6,
+        "ir_geometric": 0.1776140350877193,
+        "ir_photometric": 0.17073684210526316,
+        "ir_sensor_noise": 0.13642105263157894
+      },
+      {
+        "cls": "BKL",
+        "n": 77,
+        "error_rate": 0.2727272727272727,
+        "ir_geometric": 0.0761449077238551,
+        "ir_photometric": 0.053269537480063786,
+        "ir_sensor_noise": 0.09225336067441331
+      },
+      {
+        "cls": "DF",
+        "n": 7,
+        "error_rate": 0.5714285714285714,
+        "ir_geometric": 0.10576441102756894,
+        "ir_photometric": 0.2162907268170426,
+        "ir_sensor_noise": 0.0894736842105263
+      },
+      {
+        "cls": "VASC",
+        "n": 7,
+        "error_rate": 0.0,
+        "ir_geometric": 0.0,
+        "ir_photometric": 0.0,
+        "ir_sensor_noise": 0.012030075187969924
+      },
+      {
+        "cls": "SCC",
+        "n": 19,
+        "error_rate": 0.7894736842105263,
+        "ir_geometric": 0.13674976915974146,
+        "ir_photometric": 0.16583564173591875,
+        "ir_sensor_noise": 0.11458910433979685
+      }
+    ],
+    "family_coupling_corr": [
+      [
+        0.9999999999999999,
+        0.429167172493258,
+        0.4172791460293167
+      ],
+      [
+        0.429167172493258,
+        1.0,
+        0.5550859227858932
+      ],
+      [
+        0.4172791460293167,
+        0.5550859227858933,
+        1.0
+      ]
+    ],
+    "coupling_order": [
+      "geometric",
+      "photometric",
+      "sensor_noise"
+    ],
+    "zero_flip": {
+      "all": 0.7409879839786382,
+      "errors": 0.48484848484848486,
+      "correct": 0.7957860615883307,
+      "errors_with_zero_flips": 64,
+      "n_errors_total": 132
+    }
+  }
+}

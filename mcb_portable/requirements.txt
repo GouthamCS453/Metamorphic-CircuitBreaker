@@ -1,0 +1,8 @@
+numpy>=1.24
+pandas>=2.0
+Pillow>=10.0
+tqdm>=4.65
+# only needed if your model is a torch model (TorchClassifier):
+# torch>=2.0
+# torchvision>=0.15
+# timm>=0.9

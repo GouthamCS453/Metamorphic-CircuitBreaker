@@ -1,13 +1,18 @@
 """
 src/circuit_breaker.py — Hierarchical Metamorphic Circuit Breaker Engine.
 
-Implements the complete Phase 2 decision pipeline:
-1. Level 1 Normalization: Computes Score_m for each transformation type.
-2. Level 2 Normalization: Computes unweighted family average IR_k to eliminate skew.
-3. Cross-Family Spread Score: CFS(x) based on tau_fam = 0.35 threshold.
-4. Composite Brittleness Index: CBI(x) = alpha * max(IR_k) + beta * CFS + gamma * (1 - c0).
-5. Three-State Machine: CLOSED (Normal), HALF_OPEN (Monitor), OPEN (Tripped).
+Implements the complete decision pipeline:
+1. Level 1 Normalization: Computes Score_m per transformation type
+   (weighted flip fraction across severity tiers; mild penalised most).
+2. Level 2 Normalization: Computes IR_k per family via a 70% mean + 30% peak
+   hybrid so families with different transform counts (Mk) are held to the
+   same effective activation bar (Mk-cardinality bias eliminated).
+3. Cross-Family Spread Score: CFS(x) counts families with IR_k >= tau_fam.
+4. Composite Brittleness Index: CBI = alpha*max(IR_k) + beta*CFS + gamma*(1-c0).
+5. Three-State Machine: CLOSED / HALF_OPEN / OPEN with enforced ordering
+   theta_warn < theta_trip (auto-corrected in CircuitBreakerConfig).
 """
+
 
 from __future__ import annotations
 
@@ -41,9 +46,23 @@ class CircuitBreakerConfig:
     theta_trip: float = 0.55   # Trip threshold (enters OPEN)
 
     def __post_init__(self) -> None:
+        # Validate CBI weight sum
         total_weights = self.alpha + self.beta + self.gamma
         if abs(total_weights - 1.0) > 1e-5:
             raise ValueError(f"alpha + beta + gamma must equal 1.0, got {total_weights:.4f}")
+
+        # FIX: Enforce three-state ordering: theta_warn must be strictly < theta_trip.
+        # When theta_trip is lowered during calibration sweeps, auto-correct theta_warn
+        # to half of theta_trip so CLOSED -> HALF_OPEN -> OPEN ordering is always valid.
+        if self.theta_warn >= self.theta_trip:
+            import warnings
+            corrected = round(self.theta_trip * 0.50, 4)
+            warnings.warn(
+                f"[MCB] theta_warn ({self.theta_warn}) >= theta_trip ({self.theta_trip}): "
+                f"state ordering violated. Auto-correcting theta_warn -> {corrected}.",
+                stacklevel=2,
+            )
+            object.__setattr__(self, "theta_warn", corrected)
 
 
 @dataclass
@@ -152,15 +171,26 @@ class MetamorphicCircuitBreaker:
             if t_type not in family_to_types[fam]:
                 family_to_types[fam].append(t_type)
 
-        # ── Step 4: Level 2 Normalization (Unweighted family average IR_k) ────
+        # ── Step 4: Level 2 Normalization (IR_k per family, Mk-bias corrected) ─
+        # FIX: Pure mean (sum / Mk) is biased by family cardinality:
+        #   Sensor/Noise  Mk=2  → 1 full collapse gives IR = 0.50 (trips tau_fam=0.35)
+        #   Geometric     Mk=3  → 1 full collapse gives IR = 0.33 (does NOT trip)
+        # Hybrid formula: 70 % mean + 30 % peak.  One full collapse now gives:
+        #   Mk=2: 0.70 * 0.50 + 0.30 * 1.0 = 0.65  ✓ trips
+        #   Mk=3: 0.70 * 0.33 + 0.30 * 1.0 = 0.53  ✓ also trips
+        # Both families need comparable evidence to activate; Mk no longer biases.
         family_instability: Dict[str, float] = {}
         for fam in FAMILIES:
             t_types = family_to_types[fam]
             if t_types:
-                ir_k = sum(type_scores[t] for t in t_types) / len(t_types)
+                scores = [type_scores[t] for t in t_types]
+                mean_ir  = sum(scores) / len(scores)
+                peak_ir  = max(scores)
+                ir_k = 0.70 * mean_ir + 0.30 * peak_ir
             else:
                 ir_k = 0.0
-            family_instability[fam] = round(ir_k, 4)
+            family_instability[fam] = round(float(ir_k), 4)
+
 
         # Peak family calculation
         peak_fam = max(family_instability, key=lambda k: family_instability[k])

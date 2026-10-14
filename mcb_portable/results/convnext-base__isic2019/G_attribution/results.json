@@ -1,0 +1,110 @@
+{
+  "schema_version": "1.0",
+  "test_id": "G_attribution",
+  "title": "Test G - Fault Attribution (Exploratory)",
+  "run_id": "convnext-base__isic2019",
+  "model": "ConvNeXt-Base",
+  "dataset": "ISIC2019",
+  "status": "ok",
+  "generated": "2026-10-12T01:37:54",
+  "warnings": [
+    "EXPLORATORY: attribution is not a core claim. Metamorphic relations measure local sensitivity around the (already degraded) image, so a degradation need not raise the instability of its own family."
+  ],
+  "results": {
+    "min_severity": 2,
+    "min_delta": 0.05,
+    "variant": "selected",
+    "trials": 996,
+    "accuracy": 0.0321285140562249,
+    "accuracy_ci": [
+      0.022848864002151265,
+      0.04500335218891631
+    ],
+    "chance": 0.3333333333333333,
+    "p_value_vs_chance": 1.0000000000000553,
+    "accuracy_given_detected": 0.2882882882882883,
+    "detected_fraction": 0.11144578313253012,
+    "confusion": {
+      "geometric": {
+        "geometric": 2,
+        "photometric": 1,
+        "sensor_noise": 2,
+        "tie": 0,
+        "none": 161
+      },
+      "photometric": {
+        "geometric": 15,
+        "photometric": 30,
+        "sensor_noise": 33,
+        "tie": 0,
+        "none": 254
+      },
+      "sensor_noise": {
+        "geometric": 12,
+        "photometric": 16,
+        "sensor_noise": 0,
+        "tie": 0,
+        "none": 470
+      }
+    },
+    "flagged_by_breaker": {
+      "geometric": {
+        "flagged": 41,
+        "n": 166
+      },
+      "photometric": {
+        "flagged": 92,
+        "n": 332
+      },
+      "sensor_noise": {
+        "flagged": 120,
+        "n": 498
+      }
+    },
+    "per_shift": {
+      "blur": {
+        "family": "sensor_noise",
+        "n": 166,
+        "correct": 0,
+        "none": 158,
+        "tie": 0
+      },
+      "noise": {
+        "family": "sensor_noise",
+        "n": 166,
+        "correct": 0,
+        "none": 155,
+        "tie": 0
+      },
+      "jpeg": {
+        "family": "sensor_noise",
+        "n": 166,
+        "correct": 0,
+        "none": 157,
+        "tie": 0
+      },
+      "darken": {
+        "family": "photometric",
+        "n": 166,
+        "correct": 1,
+        "none": 134,
+        "tie": 0
+      },
+      "color_cast": {
+        "family": "photometric",
+        "n": 166,
+        "correct": 29,
+        "none": 120,
+        "tie": 0
+      },
+      "rotate": {
+        "family": "geometric",
+        "n": 166,
+        "correct": 2,
+        "none": 161,
+        "tie": 0
+      }
+    },
+    "interpretation": "not above chance"
+  }
+}

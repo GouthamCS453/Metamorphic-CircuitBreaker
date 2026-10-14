@@ -40,14 +40,34 @@ checkpoints/best_model_*.pth
 # ── Run outputs ───────────────────────────────────────────────────────────────
 outputs/
 
-# ── Research Paper compiled / binary exports (originals tracked if desired) ───
-*.pdf
+# ── Documents and Exports ─────────────────────────────────────────────────────
 *.docx
 *.doc
 *.html
 
 # Allow Phase 2 methodology markdown to be tracked
 !Phase2_Methodology_and_Architecture.md
+
+# ── Testing Suites & Experiments (Ignore all except mcb_portable) ──────────────
+mcb_experiments/
+new_test/
+member_results/
+results_v4/
+New_Scripts_Ideal/
+tests/
+test/
+random_gradcam.py
+run_phase1.py
+test_*.py
+scripts/test_*.py
+
+# Ensure mcb_portable is explicitly tracked
+!mcb_portable/
+!mcb_portable/**
+
+# ── PDF Documents (Ignore all PDFs everywhere, including mcb_portable) ─────────
+*.pdf
+**/*.pdf
 
 # ── Jupyter ───────────────────────────────────────────────────────────────────
 .ipynb_checkpoints/
@@ -70,7 +90,7 @@ desktop.ini
 *.log
 logs/
 
-# ── Coverage & testing ────────────────────────────────────────────────────────
+# ── Coverage & testing artifacts ──────────────────────────────────────────────
 .coverage
 htmlcov/
 .pytest_cache/
@@ -81,7 +101,6 @@ htmlcov/
 
 # ── Temporary / one-off scripts (not part of framework) ──────────────────────
 scripts/write_readme.py
-scripts/test_*.py
 scripts/generate_pdf.py
 scripts/build_ieee_paper.py
 scripts/test_latex_to_word.py

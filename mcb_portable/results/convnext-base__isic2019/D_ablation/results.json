@@ -1,0 +1,471 @@
+{
+  "schema_version": "1.0",
+  "test_id": "D_ablation",
+  "title": "Test D - Ablations",
+  "run_id": "convnext-base__isic2019",
+  "model": "ConvNeXt-Base",
+  "dataset": "ISIC2019",
+  "status": "ok",
+  "generated": "2026-10-12T01:36:02",
+  "warnings": [],
+  "results": {
+    "reference": "selected",
+    "ablations": [
+      {
+        "group": "reference",
+        "name": "reference (drift, softmax_trust)",
+        "tau_fam": 0.4,
+        "cal_auroc": 0.7883526239564813,
+        "eval_auroc": 0.8259785865134326,
+        "eval_auroc_ci": [
+          0.7906721182653111,
+          0.862102794558224
+        ],
+        "recall_far10": 0.5,
+        "far_far10": 0.11831442463533225
+      },
+      {
+        "group": "A1 signal type",
+        "name": "signal = flip",
+        "tau_fam": 0.5,
+        "cal_auroc": 0.7881642312990851,
+        "eval_auroc": 0.8244069544717842,
+        "eval_auroc_ci": [
+          0.789023132459113,
+          0.8589426477088552
+        ],
+        "recall_far10": 0.4772727272727273,
+        "far_far10": 0.12479740680713128,
+        "diff_vs_reference": {
+          "diff": -0.001571632041648341,
+          "ci": [
+            -0.006837520259319279,
+            0.0039017607190216515
+          ]
+        }
+      },
+      {
+        "group": "A1 signal type",
+        "name": "signal = drift",
+        "tau_fam": 0.4,
+        "cal_auroc": 0.7883526239564813,
+        "eval_auroc": 0.8259785865134326,
+        "eval_auroc_ci": [
+          0.7906721182653111,
+          0.862102794558224
+        ],
+        "recall_far10": 0.5,
+        "far_far10": 0.11831442463533225,
+        "diff_vs_reference": {
+          "diff": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "group": "A1 signal type",
+        "name": "signal = hybrid",
+        "tau_fam": 0.5,
+        "cal_auroc": 0.7872458170942788,
+        "eval_auroc": 0.8236456952016109,
+        "eval_auroc_ci": [
+          0.788246832179166,
+          0.8584441456706449
+        ],
+        "recall_far10": 0.48484848484848486,
+        "far_far10": 0.12641815235008103,
+        "diff_vs_reference": {
+          "diff": -0.002332891311821683,
+          "ci": [
+            -0.006915794902018551,
+            0.002400729335494289
+          ]
+        }
+      },
+      {
+        "group": "A2 structure",
+        "name": "flat (no hierarchy / no CFS)",
+        "tau_fam": 0.2,
+        "cal_auroc": 0.7862567556429488,
+        "eval_auroc": 0.8234124060704288,
+        "eval_auroc_ci": [
+          0.7879570625214871,
+          0.8592824517459849
+        ],
+        "recall_far10": 0.5,
+        "far_far10": 0.1166936790923825,
+        "diff_vs_reference": {
+          "diff": -0.0025661804430038293,
+          "ci": [
+            -0.004961077550218573,
+            -0.000594580325131431
+          ]
+        }
+      },
+      {
+        "group": "A3 weights",
+        "name": "weights = balanced (0.5/0.35/0.15)",
+        "tau_fam": 0.15,
+        "cal_auroc": 0.7566908829728362,
+        "eval_auroc": 0.7967192181130592,
+        "eval_auroc_ci": [
+          0.7630890550562349,
+          0.8325542704189381
+        ],
+        "recall_far10": 0.32575757575757575,
+        "far_far10": 0.09562398703403566,
+        "diff_vs_reference": {
+          "diff": -0.029259368400373353,
+          "ci": [
+            -0.046065087667599765,
+            -0.01350160846716763
+          ]
+        }
+      },
+      {
+        "group": "A3 weights",
+        "name": "weights = pure_mt (0.6/0.4/0.0)",
+        "tau_fam": 0.02,
+        "cal_auroc": 0.6441498192607943,
+        "eval_auroc": 0.6793011148764796,
+        "eval_auroc_ci": [
+          0.6342624993860813,
+          0.7179006433868671
+        ],
+        "recall_far10": 0.18181818181818182,
+        "far_far10": 0.11183144246353323,
+        "diff_vs_reference": {
+          "diff": -0.146677471636953,
+          "ci": [
+            -0.1929706301262217,
+            -0.10723042826973142
+          ]
+        }
+      },
+      {
+        "group": "A3 weights",
+        "name": "weights = peak_focus (0.7/0.2/0.1)",
+        "tau_fam": 0.15,
+        "cal_auroc": 0.7291855549929942,
+        "eval_auroc": 0.7700260301556898,
+        "eval_auroc_ci": [
+          0.7340310520111979,
+          0.8050771081970434
+        ],
+        "recall_far10": 0.26515151515151514,
+        "far_far10": 0.10048622366288493,
+        "diff_vs_reference": {
+          "diff": -0.055952556357742766,
+          "ci": [
+            -0.07980606306173565,
+            -0.03272094936398016
+          ]
+        }
+      },
+      {
+        "group": "A3 weights",
+        "name": "weights = softmax_trust (0.25/0.25/0.5)",
+        "tau_fam": 0.4,
+        "cal_auroc": 0.7883526239564813,
+        "eval_auroc": 0.8259785865134326,
+        "eval_auroc_ci": [
+          0.7906721182653111,
+          0.862102794558224
+        ],
+        "recall_far10": 0.5,
+        "far_far10": 0.11831442463533225,
+        "diff_vs_reference": {
+          "diff": 0.0,
+          "ci": [
+            0.0,
+            0.0
+          ]
+        }
+      },
+      {
+        "group": "A3 weights",
+        "name": "weights = spread (0.3/0.6/0.1)",
+        "tau_fam": 0.15,
+        "cal_auroc": 0.7603527652509744,
+        "eval_auroc": 0.7987942635430479,
+        "eval_auroc_ci": [
+          0.7652666249201906,
+          0.8347069765728597
+        ],
+        "recall_far10": 0.32575757575757575,
+        "far_far10": 0.09562398703403566,
+        "diff_vs_reference": {
+          "diff": -0.027184322970384645,
+          "ci": [
+            -0.043137616030646815,
+            -0.012349282942881007
+          ]
+        }
+      },
+      {
+        "group": "A4 components",
+        "name": "no cross-family spread (beta=0)",
+        "tau_fam": 0.02,
+        "cal_auroc": 0.7372864392610298,
+        "eval_auroc": 0.7790260792691911,
+        "eval_auroc_ci": [
+          0.7443258558027602,
+          0.814966111684102
+        ],
+        "recall_far10": 0.25757575757575757,
+        "far_far10": 0.08914100486223663,
+        "diff_vs_reference": {
+          "diff": -0.04695250724424149,
+          "ci": [
+            -0.06841817690683161,
+            -0.025379401797554157
+          ]
+        }
+      },
+      {
+        "group": "A4 components",
+        "name": "no softmax term (gamma=0)",
+        "tau_fam": 0.02,
+        "cal_auroc": 0.6441498192607943,
+        "eval_auroc": 0.6793011148764796,
+        "eval_auroc_ci": [
+          0.6342624993860813,
+          0.7179006433868671
+        ],
+        "recall_far10": 0.18181818181818182,
+        "far_far10": 0.11183144246353323,
+        "diff_vs_reference": {
+          "diff": -0.146677471636953,
+          "ci": [
+            -0.1929706301262217,
+            -0.10723042826973142
+          ]
+        }
+      },
+      {
+        "group": "A4 components",
+        "name": "softmax only (1-c0)",
+        "tau_fam": 0.02,
+        "cal_auroc": 0.792532586042459,
+        "eval_auroc": 0.8279676833161436,
+        "eval_auroc_ci": [
+          0.7936321275968764,
+          0.8627688964196257
+        ],
+        "recall_far10": 0.4772727272727273,
+        "far_far10": 0.11507293354943274,
+        "diff_vs_reference": {
+          "diff": 0.0019890968027109768,
+          "ci": [
+            -0.002021327537940212,
+            0.005881341780855531
+          ]
+        }
+      },
+      {
+        "group": "A4 components",
+        "name": "peak instability only",
+        "tau_fam": 0.02,
+        "cal_auroc": 0.6411473112835427,
+        "eval_auroc": 0.6816462845636265,
+        "eval_auroc_ci": [
+          0.6388582952703699,
+          0.722677545307205
+        ],
+        "recall_far10": 0.1590909090909091,
+        "far_far10": 0.10696920583468396,
+        "diff_vs_reference": {
+          "diff": -0.14433230194980606,
+          "ci": [
+            -0.18749478169048667,
+            -0.09826813516035557
+          ]
+        }
+      },
+      {
+        "group": "A4 components",
+        "name": "spread only",
+        "tau_fam": 0.02,
+        "cal_auroc": 0.6356544878663354,
+        "eval_auroc": 0.6755746279652276,
+        "eval_auroc_ci": [
+          0.6283068734345071,
+          0.7138782476302735
+        ],
+        "recall_far10": 0.0,
+        "far_far10": 0.0,
+        "diff_vs_reference": {
+          "diff": -0.15040395854820499,
+          "ci": [
+            -0.19544088576199597,
+            -0.113176998919503
+          ]
+        }
+      },
+      {
+        "group": "A5 level-2 mix",
+        "name": "mean weight = 1.0 (pure mean)",
+        "tau_fam": 0.4,
+        "cal_auroc": 0.7890119982573679,
+        "eval_auroc": 0.8260031432640833,
+        "eval_auroc_ci": [
+          0.7905591572123176,
+          0.8618900717057119
+        ],
+        "recall_far10": 0.5,
+        "far_far10": 0.11993517017828201,
+        "diff_vs_reference": {
+          "diff": 2.4556750650717163e-05,
+          "ci": [
+            -0.0011547811993516982,
+            0.0011676734934433237
+          ]
+        }
+      },
+      {
+        "group": "A5 level-2 mix",
+        "name": "mean weight = 0.5",
+        "tau_fam": 0.4,
+        "cal_auroc": 0.7876461514912456,
+        "eval_auroc": 0.825929473012131,
+        "eval_auroc_ci": [
+          0.7908655026766858,
+          0.8620300451844212
+        ],
+        "recall_far10": 0.5,
+        "far_far10": 0.11831442463533225,
+        "diff_vs_reference": {
+          "diff": -4.911350130154535e-05,
+          "ci": [
+            -0.0008103727714748876,
+            0.0007373164382888925
+          ]
+        }
+      },
+      {
+        "group": "A5 level-2 mix",
+        "name": "mean weight = 0.0 (pure peak)",
+        "tau_fam": 0.4,
+        "cal_auroc": 0.7857622249172839,
+        "eval_auroc": 0.8250822651146801,
+        "eval_auroc_ci": [
+          0.7903927852266588,
+          0.8611196036540445
+        ],
+        "recall_far10": 0.5,
+        "far_far10": 0.11183144246353323,
+        "diff_vs_reference": {
+          "diff": -0.0008963213987525087,
+          "ci": [
+            -0.0031626025244340106,
+            0.001486911251903149
+          ]
+        }
+      },
+      {
+        "group": "A6 severity weights",
+        "name": "uniform (1/1/1)",
+        "tau_fam": 0.5,
+        "cal_auroc": 0.7847378398426922,
+        "eval_auroc": 0.8235597465743333,
+        "eval_auroc_ci": [
+          0.7888628996611169,
+          0.8596287019301606
+        ],
+        "recall_far10": 0.4772727272727273,
+        "far_far10": 0.1166936790923825,
+        "diff_vs_reference": {
+          "diff": -0.0024188399390993043,
+          "ci": [
+            -0.003960083001817214,
+            -0.0008472078974510161
+          ]
+        }
+      },
+      {
+        "group": "A6 severity weights",
+        "name": "inverted (severe highest)",
+        "tau_fam": 0.5,
+        "cal_auroc": 0.7802988378527946,
+        "eval_auroc": 0.8206988851235204,
+        "eval_auroc_ci": [
+          0.7859636682874123,
+          0.8567119738716172
+        ],
+        "recall_far10": 0.4621212121212121,
+        "far_far10": 0.11345218800648298,
+        "diff_vs_reference": {
+          "diff": -0.005279701389912184,
+          "ci": [
+            -0.008398408722557815,
+            -0.0023181572614311384
+          ]
+        }
+      },
+      {
+        "group": "A7 family removal",
+        "name": "drop geometric",
+        "tau_fam": 0.4,
+        "cal_auroc": 0.7873164643408023,
+        "eval_auroc": 0.822442414419724,
+        "eval_auroc_ci": [
+          0.7879226830705761,
+          0.8577335346986886
+        ],
+        "recall_far10": 0.48484848484848486,
+        "far_far10": 0.11831442463533225,
+        "diff_vs_reference": {
+          "diff": -0.0035361720937086005,
+          "ci": [
+            -0.006246930406168696,
+            -0.0013002799469574733
+          ]
+        }
+      },
+      {
+        "group": "A7 family removal",
+        "name": "drop photometric",
+        "tau_fam": 0.4,
+        "cal_auroc": 0.7886940856480119,
+        "eval_auroc": 0.8272923726732478,
+        "eval_auroc_ci": [
+          0.7916663597072836,
+          0.8632523574480625
+        ],
+        "recall_far10": 0.49242424242424243,
+        "far_far10": 0.1166936790923825,
+        "diff_vs_reference": {
+          "diff": 0.0013137861598152556,
+          "ci": [
+            -0.0003011271548548633,
+            0.002695410343303339
+          ]
+        }
+      },
+      {
+        "group": "A7 family removal",
+        "name": "drop sensor_noise",
+        "tau_fam": 0.15,
+        "cal_auroc": 0.7909430229956788,
+        "eval_auroc": 0.8283360345759049,
+        "eval_auroc_ci": [
+          0.7955935980551053,
+          0.8647328225529197
+        ],
+        "recall_far10": 0.49242424242424243,
+        "far_far10": 0.11831442463533225,
+        "diff_vs_reference": {
+          "diff": 0.0023574480624722893,
+          "ci": [
+            -0.0015289646873926088,
+            0.006981177250626191
+          ]
+        }
+      }
+    ],
+    "bank_strength": [],
+    "protocol": "tau_fam re-tuned on calibration split for every row; far10 threshold from calibration; AUROC differences are paired bootstrap vs the reference row."
+  }
+}

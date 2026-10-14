@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "test_id": "F_latency",
+  "title": "Test F - Latency",
+  "run_id": "convnext-base__isic2019",
+  "model": "ConvNeXt-Base",
+  "dataset": "ISIC2019",
+  "status": "ok",
+  "generated": "2026-10-12T01:37:54",
+  "warnings": [],
+  "results": {
+    "device": "cpu",
+    "runs": 30,
+    "warmup": 5,
+    "n_variants": 26,
+    "components": {
+      "base": {
+        "mean_ms": 136.932803329546,
+        "sd_ms": 10.86841725617709,
+        "p50_ms": 134.98495001113042,
+        "p95_ms": 160.6933350267354,
+        "n": 30
+      },
+      "generate": {
+        "mean_ms": 354.4946333277039,
+        "sd_ms": 162.41169201047563,
+        "p50_ms": 473.4889999963343,
+        "p95_ms": 505.6174749333877,
+        "n": 30
+      },
+      "batch": {
+        "mean_ms": 2649.9763233354315,
+        "sd_ms": 85.63775378932546,
+        "p50_ms": 2637.5681000063196,
+        "p95_ms": 2740.4009749996476,
+        "n": 30
+      },
+      "score": {
+        "mean_ms": 0.4760733339935541,
+        "sd_ms": 0.13417078430078602,
+        "p50_ms": 0.48589997459203005,
+        "p95_ms": 0.6481949822045863,
+        "n": 30
+      },
+      "total": {
+        "mean_ms": 3004.947029997129,
+        "sd_ms": 221.74144977672753,
+        "p50_ms": 3095.889500051271,
+        "p95_ms": 3242.5292749656364,
+        "n": 30
+      }
+    },
+    "overhead_factor_vs_single_pass": 21.94468350118668,
+    "environment": {
+      "python": "3.14.0",
+      "platform": "Windows-11-10.0.26200-SP0",
+      "mcb_version": "1.0.0",
+      "numpy": "2.5.2",
+      "pandas": "3.0.5",
+      "pil": "12.3.0",
+      "torch": "2.13.0+cpu",
+      "cuda": null,
+      "git_commit": "52475ca"
+    }
+  }
+}

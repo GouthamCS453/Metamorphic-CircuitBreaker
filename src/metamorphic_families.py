@@ -97,7 +97,19 @@ def _gaussian_noise(img: Image.Image, sigma: float) -> Image.Image:
     return Image.fromarray((noisy * 255.0).astype(np.uint8))
 
 
+def _jpeg(img: Image.Image, quality: int) -> Image.Image:
+    """Simulate JPEG compression artifact at specified quality factor."""
+    import io
+    buf = io.BytesIO()
+    img.convert("RGB").save(buf, format="JPEG", quality=quality)
+    buf.seek(0)
+    res = Image.open(buf).convert("RGB")
+    res.load()
+    return res
+
+
 # ─── Full Test Matrix Registry ────────────────────────────────────────────────
+
 
 HIERARCHICAL_TEST_MATRIX: List[MetamorphicTest] = [
     # ── Geometric Family ──────────────────────────────────────────────────────
@@ -325,6 +337,37 @@ HIERARCHICAL_TEST_MATRIX: List[MetamorphicTest] = [
         description="Additive Gaussian noise sigma=0.09 (high ISO sensor noise floor)",
         apply_fn=lambda img: _gaussian_noise(img, 0.09),
     ),
+    MetamorphicTest(
+        id="NOISE_JPEG_MILD",
+        name="JPEG Compression (q=90)",
+        family="sensor_noise",
+        transform_type="jpeg",
+        severity="mild",
+        weight=SEVERITY_WEIGHTS["mild"],
+        description="JPEG compression artifact with quality factor 90",
+        apply_fn=lambda img: _jpeg(img, 90),
+    ),
+    MetamorphicTest(
+        id="NOISE_JPEG_MOD",
+        name="JPEG Compression (q=70)",
+        family="sensor_noise",
+        transform_type="jpeg",
+        severity="moderate",
+        weight=SEVERITY_WEIGHTS["moderate"],
+        description="JPEG compression artifact with quality factor 70",
+        apply_fn=lambda img: _jpeg(img, 70),
+    ),
+    MetamorphicTest(
+        id="NOISE_JPEG_SEV",
+        name="JPEG Compression (q=50)",
+        family="sensor_noise",
+        transform_type="jpeg",
+        severity="severe",
+        weight=SEVERITY_WEIGHTS["severe"],
+        description="JPEG compression artifact with quality factor 50",
+        apply_fn=lambda img: _jpeg(img, 50),
+    ),
 ]
+
 
 FAMILIES: List[str] = ["geometric", "photometric", "sensor_noise"]
