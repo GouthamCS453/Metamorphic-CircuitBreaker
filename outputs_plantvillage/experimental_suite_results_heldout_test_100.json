@@ -1,0 +1,3805 @@
+{
+  "suite": "Comprehensive Experimental Testing & Evaluation Protocol",
+  "project": "Metamorphic Circuit Breaker",
+  "executed_at": "2026-10-06T16:56:59.249461+00:00",
+  "execution_mode": "batched_model_execution_on_structured_dataset_test",
+  "overall_status": "EXECUTED_WITH_SCOPE_NOTES",
+  "scope_notes": [
+    "All tests use the structured dataset 'test' split as a held-out labeled evaluation set.",
+    "A deterministic stratified sample of 100 images was used from 5741 available images.",
+    "Test 3 computes normalized softmax entropy and 10 stochastic dropout passes directly from the Keras model.",
+    "Latency is CPU-only on Windows; TensorFlow reports that native Windows GPU support is unavailable."
+  ],
+  "test_1_web_comparison": {
+    "sample_count": 100,
+    "correct_count": 83,
+    "error_count": 17,
+    "mcb_open_count": 8,
+    "mcb_half_open_count": 10,
+    "mcb_closed_count": 82,
+    "mcb_interception_metrics": {
+      "tp": 3,
+      "tn": 78,
+      "fp": 5,
+      "fn": 14,
+      "safety_recall": 0.17647058823529413,
+      "false_trip_rate": 0.060240963855421686,
+      "precision": 0.375,
+      "f2": 0.1973684210526316
+    },
+    "samples": [
+      {
+        "baseline_label": "Cassava__Bacterial_Blight_(CBB)",
+        "baseline_confidence": 0.754993,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.076225,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Healthy",
+        "baseline_confidence": 0.76551,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.074647,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Green_Mottle_(CGM)",
+        "baseline_confidence": 0.995005,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.040223,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Healthy",
+        "baseline_confidence": 0.97617,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.043048,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Green_Mottle_(CGM)",
+        "baseline_confidence": 0.458739,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.333333,
+          "photometric": 0.438596,
+          "sensor_noise": 0.605263
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.605263,
+        "cross_family_spread": 0.666667,
+        "cbi": 0.617154,
+        "state": "OPEN",
+        "action": "TRIP_TO_DOCTOR",
+        "flip_count": 8,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Rice__Healthy",
+        "baseline_confidence": 0.612512,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.666667,
+          "photometric": 0.157895,
+          "sensor_noise": 0.157895
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.666667,
+        "cross_family_spread": 0.333333,
+        "cbi": 0.508123,
+        "state": "HALF_OPEN",
+        "action": "WARN_AND_PASS",
+        "flip_count": 7,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Rice__Healthy",
+        "baseline_confidence": 0.787385,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.031892,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Rice__Healthy",
+        "baseline_confidence": 0.690714,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.052632,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.052632,
+        "cross_family_spread": 0.0,
+        "cbi": 0.072709,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Rice__Healthy",
+        "baseline_confidence": 0.69364,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.045954,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "apple__apple_scab",
+        "baseline_confidence": 0.999998,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "apple__black_rot",
+        "baseline_confidence": 0.999998,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "apple__cedar_apple_rust",
+        "baseline_confidence": 0.998741,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.473684
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.473684,
+        "cross_family_spread": 0.333333,
+        "cbi": 0.353698,
+        "state": "HALF_OPEN",
+        "action": "WARN_AND_PASS",
+        "flip_count": 4,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "apple__healthy",
+        "baseline_confidence": 0.99998,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039477,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "cherry(includingsour)__healthy",
+        "baseline_confidence": 0.999995,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "cherry(includingsour)__powdery_mildew",
+        "baseline_confidence": 0.935858,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.315789
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.315789,
+        "cross_family_spread": 0.0,
+        "cbi": 0.167516,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 3,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "corn(maize)__cercospora_leaf_spot_gray_leaf_spot",
+        "baseline_confidence": 0.968611,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.157895,
+          "photometric": 0.052632,
+          "sensor_noise": 0.315789
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.315789,
+        "cross_family_spread": 0.0,
+        "cbi": 0.162603,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 6,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "corn(maize)__common_rust",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.0,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "corn(maize)__healthy",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "corn(maize)__northern_leaf_blight",
+        "baseline_confidence": 0.999999,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.236842
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.236842,
+        "cross_family_spread": 0.0,
+        "cbi": 0.118421,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 2,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "grape__black_rot",
+        "baseline_confidence": 0.999999,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "grape__esca_(black_measles)",
+        "baseline_confidence": 0.999999,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "grape__healthy",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "grape__leaf_blight_(isariopsis_leaf_spot)",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "orange__haunglongbing_(citrus_greening)",
+        "baseline_confidence": 0.999842,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039497,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "peach__bacterial_spot",
+        "baseline_confidence": 0.999822,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.105263,
+          "sensor_noise": 0.236842
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.236842,
+        "cross_family_spread": 0.0,
+        "cbi": 0.118448,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 4,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "peach__healthy",
+        "baseline_confidence": 0.999998,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.0,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "pepperbell__bacterial_spot",
+        "baseline_confidence": 0.992621,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.263158,
+          "sensor_noise": 0.473684
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.473684,
+        "cross_family_spread": 0.333333,
+        "cbi": 0.354616,
+        "state": "HALF_OPEN",
+        "action": "WARN_AND_PASS",
+        "flip_count": 8,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "pepperbell__healthy",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.236842
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.236842,
+        "cross_family_spread": 0.0,
+        "cbi": 0.118421,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 2,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "potato__early_blight",
+        "baseline_confidence": 0.995049,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.105263,
+          "sensor_noise": 0.315789
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.315789,
+        "cross_family_spread": 0.0,
+        "cbi": 0.158637,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 5,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "potato__healthy",
+        "baseline_confidence": 0.999918,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039486,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "potato__late_blight",
+        "baseline_confidence": 0.999926,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.315789
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.315789,
+        "cross_family_spread": 0.0,
+        "cbi": 0.157906,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 3,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "squash__powdery_mildew",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.0,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "strawberry__healthy",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "strawberry__leaf_scorch",
+        "baseline_confidence": 0.999946,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 8e-06,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__bacterial_spot",
+        "baseline_confidence": 0.797377,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.052632,
+          "sensor_noise": 0.315789
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.315789,
+        "cross_family_spread": 0.0,
+        "cbi": 0.188288,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 4,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__early_blight",
+        "baseline_confidence": 0.99317,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.473684
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.473684,
+        "cross_family_spread": 0.333333,
+        "cbi": 0.354533,
+        "state": "HALF_OPEN",
+        "action": "WARN_AND_PASS",
+        "flip_count": 4,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__healthy",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__late_blight",
+        "baseline_confidence": 0.999994,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.236842
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.236842,
+        "cross_family_spread": 0.0,
+        "cbi": 0.118422,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 2,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__leaf_mold",
+        "baseline_confidence": 0.827271,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.157895
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.157895,
+        "cross_family_spread": 0.0,
+        "cbi": 0.104857,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 2,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__septoria_leaf_spot",
+        "baseline_confidence": 0.995671,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.052632,
+          "sensor_noise": 0.236842
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.236842,
+        "cross_family_spread": 0.0,
+        "cbi": 0.11907,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 3,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__spider_mites_two-spotted_spider_mite",
+        "baseline_confidence": 0.994617,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.315789
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.315789,
+        "cross_family_spread": 0.0,
+        "cbi": 0.158702,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 3,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__target_spot",
+        "baseline_confidence": 0.997683,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.315789
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.315789,
+        "cross_family_spread": 0.0,
+        "cbi": 0.158242,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 3,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__tomato_mosaic_virus",
+        "baseline_confidence": 0.999876,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039492,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__tomato_yellow_leaf_curl_virus",
+        "baseline_confidence": 0.999923,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039485,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Brown_Streak_Disease_(CBSD)",
+        "baseline_confidence": 0.349117,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.508772,
+          "photometric": 0.105263,
+          "sensor_noise": 1.0
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 1.0,
+        "cross_family_spread": 0.666667,
+        "cbi": 0.830966,
+        "state": "OPEN",
+        "action": "TRIP_TO_DOCTOR",
+        "flip_count": 12,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Healthy",
+        "baseline_confidence": 0.903767,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.157895
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.157895,
+        "cross_family_spread": 0.0,
+        "cbi": 0.093382,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 2,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Green_Mottle_(CGM)",
+        "baseline_confidence": 0.492426,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.157895,
+          "photometric": 0.719298,
+          "sensor_noise": 0.473684
+        },
+        "peak_family": "photometric",
+        "peak_family_score": 0.719298,
+        "cross_family_spread": 0.666667,
+        "cbi": 0.669119,
+        "state": "OPEN",
+        "action": "TRIP_TO_DOCTOR",
+        "flip_count": 13,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Mosaic_Disease_(CMD)",
+        "baseline_confidence": 0.335808,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.210526,
+          "photometric": 0.666667,
+          "sensor_noise": 0.315789
+        },
+        "peak_family": "photometric",
+        "peak_family_score": 0.666667,
+        "cross_family_spread": 0.333333,
+        "cbi": 0.549629,
+        "state": "HALF_OPEN",
+        "action": "WARN_AND_PASS",
+        "flip_count": 12,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Mosaic_Disease_(CMD)",
+        "baseline_confidence": 0.2088,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.649123,
+          "photometric": 0.666667,
+          "sensor_noise": 0.473684
+        },
+        "peak_family": "photometric",
+        "peak_family_score": 0.666667,
+        "cross_family_spread": 1.0,
+        "cbi": 0.802013,
+        "state": "OPEN",
+        "action": "TRIP_TO_DOCTOR",
+        "flip_count": 15,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Rice__Healthy",
+        "baseline_confidence": 0.386729,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.666667,
+          "photometric": 0.052632,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.666667,
+        "cross_family_spread": 0.333333,
+        "cbi": 0.541991,
+        "state": "HALF_OPEN",
+        "action": "WARN_AND_PASS",
+        "flip_count": 5,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Rice__Healthy",
+        "baseline_confidence": 0.779975,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.033004,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Rice__Healthy",
+        "baseline_confidence": 0.897699,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.015345,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Rice__Healthy",
+        "baseline_confidence": 0.789255,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.031612,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "apple__apple_scab",
+        "baseline_confidence": 0.999995,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.315789
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.315789,
+        "cross_family_spread": 0.0,
+        "cbi": 0.157895,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 3,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "apple__black_rot",
+        "baseline_confidence": 0.999333,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039574,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "apple__cedar_apple_rust",
+        "baseline_confidence": 0.999974,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.157895
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.157895,
+        "cross_family_spread": 0.0,
+        "cbi": 0.078951,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 2,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "apple__healthy",
+        "baseline_confidence": 0.99984,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.052632,
+          "sensor_noise": 0.157895
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.157895,
+        "cross_family_spread": 0.0,
+        "cbi": 0.078971,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 3,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "cherry(includingsour)__healthy",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.0,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "cherry(includingsour)__powdery_mildew",
+        "baseline_confidence": 0.999994,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.236842
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.236842,
+        "cross_family_spread": 0.0,
+        "cbi": 0.118422,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 2,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "corn(maize)__cercospora_leaf_spot_gray_leaf_spot",
+        "baseline_confidence": 0.999724,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039515,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "corn(maize)__common_rust",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.0,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "corn(maize)__healthy",
+        "baseline_confidence": 0.999997,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.0,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "corn(maize)__cercospora_leaf_spot_gray_leaf_spot",
+        "baseline_confidence": 0.82795,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.065281,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "grape__black_rot",
+        "baseline_confidence": 0.999977,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.315789
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.315789,
+        "cross_family_spread": 0.0,
+        "cbi": 0.157898,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 3,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "grape__esca_(black_measles)",
+        "baseline_confidence": 0.999996,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 1e-06,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "grape__healthy",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "grape__leaf_blight_(isariopsis_leaf_spot)",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "orange__haunglongbing_(citrus_greening)",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "peach__bacterial_spot",
+        "baseline_confidence": 0.999977,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039477,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "peach__healthy",
+        "baseline_confidence": 0.999999,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "pepperbell__bacterial_spot",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.236842
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.236842,
+        "cross_family_spread": 0.0,
+        "cbi": 0.118421,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 2,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "pepperbell__healthy",
+        "baseline_confidence": 0.998086,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.236842
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.236842,
+        "cross_family_spread": 0.0,
+        "cbi": 0.118708,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 2,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "potato__early_blight",
+        "baseline_confidence": 0.962577,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.315789,
+          "sensor_noise": 0.473684
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.473684,
+        "cross_family_spread": 0.333333,
+        "cbi": 0.359122,
+        "state": "HALF_OPEN",
+        "action": "WARN_AND_PASS",
+        "flip_count": 8,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "potato__healthy",
+        "baseline_confidence": 0.999957,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 6e-06,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "potato__late_blight",
+        "baseline_confidence": 0.703789,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.491228,
+          "photometric": 0.105263,
+          "sensor_noise": 0.421053
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.491228,
+        "cross_family_spread": 0.666667,
+        "cbi": 0.523379,
+        "state": "HALF_OPEN",
+        "action": "WARN_AND_PASS",
+        "flip_count": 10,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "squash__powdery_mildew",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.0,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "strawberry__healthy",
+        "baseline_confidence": 0.999995,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "strawberry__leaf_scorch",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.0,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__septoria_leaf_spot",
+        "baseline_confidence": 0.831663,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 1.0,
+          "photometric": 0.210526,
+          "sensor_noise": 0.5
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 1.0,
+        "cross_family_spread": 0.666667,
+        "cbi": 0.758584,
+        "state": "OPEN",
+        "action": "TRIP_TO_DOCTOR",
+        "flip_count": 13,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__early_blight",
+        "baseline_confidence": 0.998569,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.157895
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.157895,
+        "cross_family_spread": 0.0,
+        "cbi": 0.079162,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 2,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__healthy",
+        "baseline_confidence": 0.999999,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__late_blight",
+        "baseline_confidence": 0.999984,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039476,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__leaf_mold",
+        "baseline_confidence": 0.972406,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.736842
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.736842,
+        "cross_family_spread": 0.333333,
+        "cbi": 0.489227,
+        "state": "HALF_OPEN",
+        "action": "WARN_AND_PASS",
+        "flip_count": 5,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__septoria_leaf_spot",
+        "baseline_confidence": 0.945401,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.157895
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.157895,
+        "cross_family_spread": 0.0,
+        "cbi": 0.087137,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__spider_mites_two-spotted_spider_mite",
+        "baseline_confidence": 0.981294,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.105263,
+          "sensor_noise": 0.315789
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.315789,
+        "cross_family_spread": 0.0,
+        "cbi": 0.160701,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 5,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__target_spot",
+        "baseline_confidence": 0.916453,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.052632,
+          "photometric": 0.052632,
+          "sensor_noise": 0.473684
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.473684,
+        "cross_family_spread": 0.333333,
+        "cbi": 0.366041,
+        "state": "HALF_OPEN",
+        "action": "WARN_AND_PASS",
+        "flip_count": 6,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__tomato_mosaic_virus",
+        "baseline_confidence": 0.998657,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039675,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "tomato__tomato_yellow_leaf_curl_virus",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Healthy",
+        "baseline_confidence": 0.858122,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.060755,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Healthy",
+        "baseline_confidence": 0.913049,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.052516,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Green_Mottle_(CGM)",
+        "baseline_confidence": 0.506359,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.666667,
+          "sensor_noise": 0.473684
+        },
+        "peak_family": "photometric",
+        "peak_family_score": 0.666667,
+        "cross_family_spread": 0.666667,
+        "cbi": 0.640713,
+        "state": "OPEN",
+        "action": "TRIP_TO_DOCTOR",
+        "flip_count": 10,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Healthy",
+        "baseline_confidence": 0.282194,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.666667,
+          "photometric": 0.210526,
+          "sensor_noise": 0.5
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.666667,
+        "cross_family_spread": 0.666667,
+        "cbi": 0.674338,
+        "state": "OPEN",
+        "action": "TRIP_TO_DOCTOR",
+        "flip_count": 12,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Cassava__Mosaic_Disease_(CMD)",
+        "baseline_confidence": 0.866922,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.236842
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.236842,
+        "cross_family_spread": 0.0,
+        "cbi": 0.138383,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 2,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Rice__BrownSpot",
+        "baseline_confidence": 0.766113,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.54386,
+          "sensor_noise": 0.736842
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.736842,
+        "cross_family_spread": 0.666667,
+        "cbi": 0.636837,
+        "state": "OPEN",
+        "action": "TRIP_TO_DOCTOR",
+        "flip_count": 11,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Rice__Healthy",
+        "baseline_confidence": 0.648878,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.052668,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Rice__Healthy",
+        "baseline_confidence": 0.688804,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.046679,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "Rice__Healthy",
+        "baseline_confidence": 0.777097,
+        "baseline_correct": false,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 0.033435,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "apple__apple_scab",
+        "baseline_confidence": 1.0,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.078947
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.078947,
+        "cross_family_spread": 0.0,
+        "cbi": 0.039474,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 1,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "apple__black_rot",
+        "baseline_confidence": 0.999984,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.0
+        },
+        "peak_family": "geometric",
+        "peak_family_score": 0.0,
+        "cross_family_spread": 0.0,
+        "cbi": 2e-06,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 0,
+        "test_count": 22
+      },
+      {
+        "baseline_label": "apple__cedar_apple_rust",
+        "baseline_confidence": 0.999965,
+        "baseline_correct": true,
+        "family_instability": {
+          "geometric": 0.0,
+          "photometric": 0.0,
+          "sensor_noise": 0.157895
+        },
+        "peak_family": "sensor_noise",
+        "peak_family_score": 0.157895,
+        "cross_family_spread": 0.0,
+        "cbi": 0.078953,
+        "state": "CLOSED",
+        "action": "AUTO_APPROVE",
+        "flip_count": 2,
+        "test_count": 22
+      }
+    ]
+  },
+  "test_2_held_out_batch": {
+    "status": "EXECUTED_HELD_OUT_SPLIT",
+    "dataset": "structured_dataset_test",
+    "sample_count": 100,
+    "mcb_metrics": {
+      "tp": 3,
+      "tn": 78,
+      "fp": 5,
+      "fn": 14,
+      "safety_recall": 0.17647058823529413,
+      "false_trip_rate": 0.060240963855421686,
+      "precision": 0.375,
+      "f2": 0.1973684210526316
+    }
+  },
+  "test_3_baseline_comparison": {
+    "dataset_note": "Uses the labeled web testbed as an external comparative batch; it is not a held-out training split.",
+    "methods": {
+      "standalone": {
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      },
+      "naive_1_flip": {
+        "metrics": {
+          "tp": 12,
+          "tn": 15,
+          "fp": 68,
+          "fn": 5,
+          "safety_recall": 0.7058823529411765,
+          "false_trip_rate": 0.8192771084337349,
+          "precision": 0.15,
+          "f2": 0.40540540540540543
+        }
+      },
+      "softmax_entropy": {
+        "threshold": 0.23388576791417917,
+        "metrics": {
+          "tp": 5,
+          "tn": 78,
+          "fp": 5,
+          "fn": 12,
+          "safety_recall": 0.29411764705882354,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.5,
+          "f2": 0.32051282051282054
+        }
+      },
+      "mc_dropout": {
+        "passes": 10,
+        "threshold": 0.0021957498043775597,
+        "metrics": {
+          "tp": 3,
+          "tn": 76,
+          "fp": 7,
+          "fn": 14,
+          "safety_recall": 0.17647058823529413,
+          "false_trip_rate": 0.08433734939759036,
+          "precision": 0.3,
+          "f2": 0.19230769230769232
+        }
+      },
+      "hierarchical_mcb": {
+        "metrics": {
+          "tp": 3,
+          "tn": 78,
+          "fp": 5,
+          "fn": 14,
+          "safety_recall": 0.17647058823529413,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.375,
+          "f2": 0.1973684210526316
+        }
+      }
+    }
+  },
+  "test_4_family_profiling": {
+    "average_hierarchical_ir": {
+      "geometric": 0.05614035087719298,
+      "photometric": 0.05701754385964912,
+      "sensor_noise": 0.1792105263157895
+    },
+    "average_flat_family_score": {
+      "geometric": 0.05795454545454545,
+      "photometric": 0.05701754385964912,
+      "sensor_noise": 0.1792105263157895
+    },
+    "matrix_entries": 22
+  },
+  "test_5_threshold_and_weight_sweep": {
+    "grid_points": 119,
+    "best_point": {
+      "tau_fam": 0.45,
+      "theta_trip": 0.5,
+      "youden_j": 0.29270021261516654,
+      "metrics": {
+        "tp": 6,
+        "tn": 78,
+        "fp": 5,
+        "fn": 11,
+        "safety_recall": 0.35294117647058826,
+        "false_trip_rate": 0.060240963855421686,
+        "precision": 0.5454545454545454,
+        "f2": 0.37974683544303794
+      }
+    },
+    "weight_ablation": {
+      "balanced": {
+        "alpha": 0.5,
+        "beta": 0.35,
+        "gamma": 0.15,
+        "auroc": 0.6215450035435861
+      },
+      "worst_only": {
+        "alpha": 0.85,
+        "beta": 0.0,
+        "gamma": 0.15,
+        "auroc": 0.5818568391211907
+      },
+      "spread_dominant": {
+        "alpha": 0.15,
+        "beta": 0.7,
+        "gamma": 0.15,
+        "auroc": 0.7484053862508859
+      },
+      "high_confidence_trust": {
+        "alpha": 0.25,
+        "beta": 0.25,
+        "gamma": 0.5,
+        "auroc": 0.8277817150956768
+      },
+      "pure_black_box": {
+        "alpha": 0.6,
+        "beta": 0.4,
+        "gamma": 0.0,
+        "auroc": 0.4929128277817152
+      }
+    },
+    "sweep": [
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.1,
+        "youden_j": -0.03260099220411056,
+        "metrics": {
+          "tp": 6,
+          "tn": 51,
+          "fp": 32,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.3855421686746988,
+          "precision": 0.15789473684210525,
+          "f2": 0.2830188679245283
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.15,
+        "youden_j": -0.02055279943302618,
+        "metrics": {
+          "tp": 6,
+          "tn": 52,
+          "fp": 31,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.37349397590361444,
+          "precision": 0.16216216216216217,
+          "f2": 0.28571428571428575
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.2,
+        "youden_j": -0.02055279943302618,
+        "metrics": {
+          "tp": 6,
+          "tn": 52,
+          "fp": 31,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.37349397590361444,
+          "precision": 0.16216216216216217,
+          "f2": 0.28571428571428575
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.25,
+        "youden_j": 0.0758327427356485,
+        "metrics": {
+          "tp": 6,
+          "tn": 60,
+          "fp": 23,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.27710843373493976,
+          "precision": 0.20689655172413793,
+          "f2": 0.309278350515464
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.3,
+        "youden_j": 0.19631467044649187,
+        "metrics": {
+          "tp": 6,
+          "tn": 70,
+          "fp": 13,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.1566265060240964,
+          "precision": 0.3157894736842105,
+          "f2": 0.3448275862068966
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.35,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.4,
+        "youden_j": 0.2445074415308292,
+        "metrics": {
+          "tp": 6,
+          "tn": 74,
+          "fp": 9,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.10843373493975904,
+          "precision": 0.4,
+          "f2": 0.3614457831325301
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.45,
+        "youden_j": 0.2445074415308292,
+        "metrics": {
+          "tp": 6,
+          "tn": 74,
+          "fp": 9,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.10843373493975904,
+          "precision": 0.4,
+          "f2": 0.3614457831325301
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.5,
+        "youden_j": 0.2806520198440822,
+        "metrics": {
+          "tp": 6,
+          "tn": 77,
+          "fp": 6,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.07228915662650602,
+          "precision": 0.5,
+          "f2": 0.375
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.55,
+        "youden_j": 0.17505315379163713,
+        "metrics": {
+          "tp": 4,
+          "tn": 78,
+          "fp": 5,
+          "fn": 13,
+          "safety_recall": 0.23529411764705882,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.4444444444444444,
+          "f2": 0.25974025974025977
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.6,
+        "youden_j": 0.17505315379163713,
+        "metrics": {
+          "tp": 4,
+          "tn": 78,
+          "fp": 5,
+          "fn": 13,
+          "safety_recall": 0.23529411764705882,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.4444444444444444,
+          "f2": 0.25974025974025977
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.65,
+        "youden_j": 0.1991495393338058,
+        "metrics": {
+          "tp": 4,
+          "tn": 80,
+          "fp": 3,
+          "fn": 13,
+          "safety_recall": 0.23529411764705882,
+          "false_trip_rate": 0.03614457831325301,
+          "precision": 0.5714285714285714,
+          "f2": 0.26666666666666666
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.7,
+        "youden_j": 0.21119773210489015,
+        "metrics": {
+          "tp": 4,
+          "tn": 81,
+          "fp": 2,
+          "fn": 13,
+          "safety_recall": 0.23529411764705882,
+          "false_trip_rate": 0.024096385542168676,
+          "precision": 0.6666666666666666,
+          "f2": 0.27027027027027023
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.75,
+        "youden_j": 0.15237420269312546,
+        "metrics": {
+          "tp": 3,
+          "tn": 81,
+          "fp": 2,
+          "fn": 14,
+          "safety_recall": 0.17647058823529413,
+          "false_trip_rate": 0.024096385542168676,
+          "precision": 0.6,
+          "f2": 0.20547945205479454
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.8,
+        "youden_j": 0.10559886605244508,
+        "metrics": {
+          "tp": 2,
+          "tn": 82,
+          "fp": 1,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.6666666666666666,
+          "f2": 0.1408450704225352
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.85,
+        "youden_j": 0.058823529411764705,
+        "metrics": {
+          "tp": 1,
+          "tn": 83,
+          "fp": 0,
+          "fn": 16,
+          "safety_recall": 0.058823529411764705,
+          "false_trip_rate": 0.0,
+          "precision": 1.0,
+          "f2": 0.07246376811594203
+        }
+      },
+      {
+        "tau_fam": 0.2,
+        "theta_trip": 0.9,
+        "youden_j": 0.0,
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.1,
+        "youden_j": -0.03260099220411056,
+        "metrics": {
+          "tp": 6,
+          "tn": 51,
+          "fp": 32,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.3855421686746988,
+          "precision": 0.15789473684210525,
+          "f2": 0.2830188679245283
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.15,
+        "youden_j": 0.08788093550673282,
+        "metrics": {
+          "tp": 6,
+          "tn": 61,
+          "fp": 22,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.26506024096385544,
+          "precision": 0.21428571428571427,
+          "f2": 0.3125
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.2,
+        "youden_j": 0.08788093550673282,
+        "metrics": {
+          "tp": 6,
+          "tn": 61,
+          "fp": 22,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.26506024096385544,
+          "precision": 0.21428571428571427,
+          "f2": 0.3125
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.25,
+        "youden_j": 0.08788093550673282,
+        "metrics": {
+          "tp": 6,
+          "tn": 61,
+          "fp": 22,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.26506024096385544,
+          "precision": 0.21428571428571427,
+          "f2": 0.3125
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.3,
+        "youden_j": 0.19631467044649187,
+        "metrics": {
+          "tp": 6,
+          "tn": 70,
+          "fp": 13,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.1566265060240964,
+          "precision": 0.3157894736842105,
+          "f2": 0.3448275862068966
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.35,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.4,
+        "youden_j": 0.2445074415308292,
+        "metrics": {
+          "tp": 6,
+          "tn": 74,
+          "fp": 9,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.10843373493975904,
+          "precision": 0.4,
+          "f2": 0.3614457831325301
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.45,
+        "youden_j": 0.2445074415308292,
+        "metrics": {
+          "tp": 6,
+          "tn": 74,
+          "fp": 9,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.10843373493975904,
+          "precision": 0.4,
+          "f2": 0.3614457831325301
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.5,
+        "youden_j": 0.2806520198440822,
+        "metrics": {
+          "tp": 6,
+          "tn": 77,
+          "fp": 6,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.07228915662650602,
+          "precision": 0.5,
+          "f2": 0.375
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.55,
+        "youden_j": 0.17505315379163713,
+        "metrics": {
+          "tp": 4,
+          "tn": 78,
+          "fp": 5,
+          "fn": 13,
+          "safety_recall": 0.23529411764705882,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.4444444444444444,
+          "f2": 0.25974025974025977
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.6,
+        "youden_j": 0.17505315379163713,
+        "metrics": {
+          "tp": 4,
+          "tn": 78,
+          "fp": 5,
+          "fn": 13,
+          "safety_recall": 0.23529411764705882,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.4444444444444444,
+          "f2": 0.25974025974025977
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.65,
+        "youden_j": 0.1991495393338058,
+        "metrics": {
+          "tp": 4,
+          "tn": 80,
+          "fp": 3,
+          "fn": 13,
+          "safety_recall": 0.23529411764705882,
+          "false_trip_rate": 0.03614457831325301,
+          "precision": 0.5714285714285714,
+          "f2": 0.26666666666666666
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.7,
+        "youden_j": 0.16442239546420978,
+        "metrics": {
+          "tp": 3,
+          "tn": 82,
+          "fp": 1,
+          "fn": 14,
+          "safety_recall": 0.17647058823529413,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.75,
+          "f2": 0.20833333333333337
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.75,
+        "youden_j": 0.10559886605244508,
+        "metrics": {
+          "tp": 2,
+          "tn": 82,
+          "fp": 1,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.6666666666666666,
+          "f2": 0.1408450704225352
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.8,
+        "youden_j": 0.04677533664068037,
+        "metrics": {
+          "tp": 1,
+          "tn": 82,
+          "fp": 1,
+          "fn": 16,
+          "safety_recall": 0.058823529411764705,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.5,
+          "f2": 0.07142857142857144
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.85,
+        "youden_j": 0.0,
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      },
+      {
+        "tau_fam": 0.25,
+        "theta_trip": 0.9,
+        "youden_j": 0.0,
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.1,
+        "youden_j": -0.03260099220411056,
+        "metrics": {
+          "tp": 6,
+          "tn": 51,
+          "fp": 32,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.3855421686746988,
+          "precision": 0.15789473684210525,
+          "f2": 0.2830188679245283
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.15,
+        "youden_j": 0.08788093550673282,
+        "metrics": {
+          "tp": 6,
+          "tn": 61,
+          "fp": 22,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.26506024096385544,
+          "precision": 0.21428571428571427,
+          "f2": 0.3125
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.2,
+        "youden_j": 0.08788093550673282,
+        "metrics": {
+          "tp": 6,
+          "tn": 61,
+          "fp": 22,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.26506024096385544,
+          "precision": 0.21428571428571427,
+          "f2": 0.3125
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.25,
+        "youden_j": 0.08788093550673282,
+        "metrics": {
+          "tp": 6,
+          "tn": 61,
+          "fp": 22,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.26506024096385544,
+          "precision": 0.21428571428571427,
+          "f2": 0.3125
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.3,
+        "youden_j": 0.19631467044649187,
+        "metrics": {
+          "tp": 6,
+          "tn": 70,
+          "fp": 13,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.1566265060240964,
+          "precision": 0.3157894736842105,
+          "f2": 0.3448275862068966
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.35,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.4,
+        "youden_j": 0.2565556343019135,
+        "metrics": {
+          "tp": 6,
+          "tn": 75,
+          "fp": 8,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.0963855421686747,
+          "precision": 0.42857142857142855,
+          "f2": 0.3658536585365854
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.45,
+        "youden_j": 0.2565556343019135,
+        "metrics": {
+          "tp": 6,
+          "tn": 75,
+          "fp": 8,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.0963855421686747,
+          "precision": 0.42857142857142855,
+          "f2": 0.3658536585365854
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.5,
+        "youden_j": 0.2806520198440822,
+        "metrics": {
+          "tp": 6,
+          "tn": 77,
+          "fp": 6,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.07228915662650602,
+          "precision": 0.5,
+          "f2": 0.375
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.55,
+        "youden_j": 0.17505315379163713,
+        "metrics": {
+          "tp": 4,
+          "tn": 78,
+          "fp": 5,
+          "fn": 13,
+          "safety_recall": 0.23529411764705882,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.4444444444444444,
+          "f2": 0.25974025974025977
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.6,
+        "youden_j": 0.17505315379163713,
+        "metrics": {
+          "tp": 4,
+          "tn": 78,
+          "fp": 5,
+          "fn": 13,
+          "safety_recall": 0.23529411764705882,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.4444444444444444,
+          "f2": 0.25974025974025977
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.65,
+        "youden_j": 0.1991495393338058,
+        "metrics": {
+          "tp": 4,
+          "tn": 80,
+          "fp": 3,
+          "fn": 13,
+          "safety_recall": 0.23529411764705882,
+          "false_trip_rate": 0.03614457831325301,
+          "precision": 0.5714285714285714,
+          "f2": 0.26666666666666666
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.7,
+        "youden_j": 0.16442239546420978,
+        "metrics": {
+          "tp": 3,
+          "tn": 82,
+          "fp": 1,
+          "fn": 14,
+          "safety_recall": 0.17647058823529413,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.75,
+          "f2": 0.20833333333333337
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.75,
+        "youden_j": 0.10559886605244508,
+        "metrics": {
+          "tp": 2,
+          "tn": 82,
+          "fp": 1,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.6666666666666666,
+          "f2": 0.1408450704225352
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.8,
+        "youden_j": 0.04677533664068037,
+        "metrics": {
+          "tp": 1,
+          "tn": 82,
+          "fp": 1,
+          "fn": 16,
+          "safety_recall": 0.058823529411764705,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.5,
+          "f2": 0.07142857142857144
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.85,
+        "youden_j": 0.0,
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      },
+      {
+        "tau_fam": 0.3,
+        "theta_trip": 0.9,
+        "youden_j": 0.0,
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.1,
+        "youden_j": -0.03260099220411056,
+        "metrics": {
+          "tp": 6,
+          "tn": 51,
+          "fp": 32,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.3855421686746988,
+          "precision": 0.15789473684210525,
+          "f2": 0.2830188679245283
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.15,
+        "youden_j": 0.08788093550673282,
+        "metrics": {
+          "tp": 6,
+          "tn": 61,
+          "fp": 22,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.26506024096385544,
+          "precision": 0.21428571428571427,
+          "f2": 0.3125
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.2,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.25,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.3,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.35,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.4,
+        "youden_j": 0.2686038270729979,
+        "metrics": {
+          "tp": 6,
+          "tn": 76,
+          "fp": 7,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.08433734939759036,
+          "precision": 0.46153846153846156,
+          "f2": 0.3703703703703704
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.45,
+        "youden_j": 0.2686038270729979,
+        "metrics": {
+          "tp": 6,
+          "tn": 76,
+          "fp": 7,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.08433734939759036,
+          "precision": 0.46153846153846156,
+          "f2": 0.3703703703703704
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.5,
+        "youden_j": 0.2806520198440822,
+        "metrics": {
+          "tp": 6,
+          "tn": 77,
+          "fp": 6,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.07228915662650602,
+          "precision": 0.5,
+          "f2": 0.375
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.55,
+        "youden_j": 0.11622962437987244,
+        "metrics": {
+          "tp": 3,
+          "tn": 78,
+          "fp": 5,
+          "fn": 14,
+          "safety_recall": 0.17647058823529413,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.375,
+          "f2": 0.1973684210526316
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.6,
+        "youden_j": 0.11622962437987244,
+        "metrics": {
+          "tp": 3,
+          "tn": 78,
+          "fp": 5,
+          "fn": 14,
+          "safety_recall": 0.17647058823529413,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.375,
+          "f2": 0.1973684210526316
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.65,
+        "youden_j": 0.08150248051027639,
+        "metrics": {
+          "tp": 2,
+          "tn": 80,
+          "fp": 3,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.03614457831325301,
+          "precision": 0.4,
+          "f2": 0.136986301369863
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.7,
+        "youden_j": 0.10559886605244508,
+        "metrics": {
+          "tp": 2,
+          "tn": 82,
+          "fp": 1,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.6666666666666666,
+          "f2": 0.1408450704225352
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.75,
+        "youden_j": 0.10559886605244508,
+        "metrics": {
+          "tp": 2,
+          "tn": 82,
+          "fp": 1,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.6666666666666666,
+          "f2": 0.1408450704225352
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.8,
+        "youden_j": 0.04677533664068037,
+        "metrics": {
+          "tp": 1,
+          "tn": 82,
+          "fp": 1,
+          "fn": 16,
+          "safety_recall": 0.058823529411764705,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.5,
+          "f2": 0.07142857142857144
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.85,
+        "youden_j": 0.0,
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      },
+      {
+        "tau_fam": 0.35,
+        "theta_trip": 0.9,
+        "youden_j": 0.0,
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.1,
+        "youden_j": -0.03260099220411056,
+        "metrics": {
+          "tp": 6,
+          "tn": 51,
+          "fp": 32,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.3855421686746988,
+          "precision": 0.15789473684210525,
+          "f2": 0.2830188679245283
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.15,
+        "youden_j": 0.08788093550673282,
+        "metrics": {
+          "tp": 6,
+          "tn": 61,
+          "fp": 22,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.26506024096385544,
+          "precision": 0.21428571428571427,
+          "f2": 0.3125
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.2,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.25,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.3,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.35,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.4,
+        "youden_j": 0.2686038270729979,
+        "metrics": {
+          "tp": 6,
+          "tn": 76,
+          "fp": 7,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.08433734939759036,
+          "precision": 0.46153846153846156,
+          "f2": 0.3703703703703704
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.45,
+        "youden_j": 0.2686038270729979,
+        "metrics": {
+          "tp": 6,
+          "tn": 76,
+          "fp": 7,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.08433734939759036,
+          "precision": 0.46153846153846156,
+          "f2": 0.3703703703703704
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.5,
+        "youden_j": 0.2806520198440822,
+        "metrics": {
+          "tp": 6,
+          "tn": 77,
+          "fp": 6,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.07228915662650602,
+          "precision": 0.5,
+          "f2": 0.375
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.55,
+        "youden_j": 0.11622962437987244,
+        "metrics": {
+          "tp": 3,
+          "tn": 78,
+          "fp": 5,
+          "fn": 14,
+          "safety_recall": 0.17647058823529413,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.375,
+          "f2": 0.1973684210526316
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.6,
+        "youden_j": 0.11622962437987244,
+        "metrics": {
+          "tp": 3,
+          "tn": 78,
+          "fp": 5,
+          "fn": 14,
+          "safety_recall": 0.17647058823529413,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.375,
+          "f2": 0.1973684210526316
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.65,
+        "youden_j": 0.08150248051027639,
+        "metrics": {
+          "tp": 2,
+          "tn": 80,
+          "fp": 3,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.03614457831325301,
+          "precision": 0.4,
+          "f2": 0.136986301369863
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.7,
+        "youden_j": 0.10559886605244508,
+        "metrics": {
+          "tp": 2,
+          "tn": 82,
+          "fp": 1,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.6666666666666666,
+          "f2": 0.1408450704225352
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.75,
+        "youden_j": 0.10559886605244508,
+        "metrics": {
+          "tp": 2,
+          "tn": 82,
+          "fp": 1,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.6666666666666666,
+          "f2": 0.1408450704225352
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.8,
+        "youden_j": 0.04677533664068037,
+        "metrics": {
+          "tp": 1,
+          "tn": 82,
+          "fp": 1,
+          "fn": 16,
+          "safety_recall": 0.058823529411764705,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.5,
+          "f2": 0.07142857142857144
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.85,
+        "youden_j": 0.0,
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      },
+      {
+        "tau_fam": 0.4,
+        "theta_trip": 0.9,
+        "youden_j": 0.0,
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.1,
+        "youden_j": -0.03260099220411056,
+        "metrics": {
+          "tp": 6,
+          "tn": 51,
+          "fp": 32,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.3855421686746988,
+          "precision": 0.15789473684210525,
+          "f2": 0.2830188679245283
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.15,
+        "youden_j": 0.08788093550673282,
+        "metrics": {
+          "tp": 6,
+          "tn": 61,
+          "fp": 22,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.26506024096385544,
+          "precision": 0.21428571428571427,
+          "f2": 0.3125
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.2,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.25,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.3,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.35,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.4,
+        "youden_j": 0.2686038270729979,
+        "metrics": {
+          "tp": 6,
+          "tn": 76,
+          "fp": 7,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.08433734939759036,
+          "precision": 0.46153846153846156,
+          "f2": 0.3703703703703704
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.45,
+        "youden_j": 0.2806520198440822,
+        "metrics": {
+          "tp": 6,
+          "tn": 77,
+          "fp": 6,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.07228915662650602,
+          "precision": 0.5,
+          "f2": 0.375
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.5,
+        "youden_j": 0.29270021261516654,
+        "metrics": {
+          "tp": 6,
+          "tn": 78,
+          "fp": 5,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.5454545454545454,
+          "f2": 0.37974683544303794
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.55,
+        "youden_j": 0.057406094968107724,
+        "metrics": {
+          "tp": 2,
+          "tn": 78,
+          "fp": 5,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.2857142857142857,
+          "f2": 0.13333333333333333
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.6,
+        "youden_j": 0.057406094968107724,
+        "metrics": {
+          "tp": 2,
+          "tn": 78,
+          "fp": 5,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.2857142857142857,
+          "f2": 0.13333333333333333
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.65,
+        "youden_j": 0.08150248051027639,
+        "metrics": {
+          "tp": 2,
+          "tn": 80,
+          "fp": 3,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.03614457831325301,
+          "precision": 0.4,
+          "f2": 0.136986301369863
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.7,
+        "youden_j": 0.10559886605244508,
+        "metrics": {
+          "tp": 2,
+          "tn": 82,
+          "fp": 1,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.6666666666666666,
+          "f2": 0.1408450704225352
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.75,
+        "youden_j": 0.10559886605244508,
+        "metrics": {
+          "tp": 2,
+          "tn": 82,
+          "fp": 1,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.6666666666666666,
+          "f2": 0.1408450704225352
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.8,
+        "youden_j": 0.04677533664068037,
+        "metrics": {
+          "tp": 1,
+          "tn": 82,
+          "fp": 1,
+          "fn": 16,
+          "safety_recall": 0.058823529411764705,
+          "false_trip_rate": 0.012048192771084338,
+          "precision": 0.5,
+          "f2": 0.07142857142857144
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.85,
+        "youden_j": 0.0,
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      },
+      {
+        "tau_fam": 0.45,
+        "theta_trip": 0.9,
+        "youden_j": 0.0,
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.1,
+        "youden_j": -0.03260099220411056,
+        "metrics": {
+          "tp": 6,
+          "tn": 51,
+          "fp": 32,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.3855421686746988,
+          "precision": 0.15789473684210525,
+          "f2": 0.2830188679245283
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.15,
+        "youden_j": 0.08788093550673282,
+        "metrics": {
+          "tp": 6,
+          "tn": 61,
+          "fp": 22,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.26506024096385544,
+          "precision": 0.21428571428571427,
+          "f2": 0.3125
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.2,
+        "youden_j": 0.20836286321757622,
+        "metrics": {
+          "tp": 6,
+          "tn": 71,
+          "fp": 12,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.14457831325301204,
+          "precision": 0.3333333333333333,
+          "f2": 0.3488372093023256
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.25,
+        "youden_j": 0.2686038270729979,
+        "metrics": {
+          "tp": 6,
+          "tn": 76,
+          "fp": 7,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.08433734939759036,
+          "precision": 0.46153846153846156,
+          "f2": 0.3703703703703704
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.3,
+        "youden_j": 0.2806520198440822,
+        "metrics": {
+          "tp": 6,
+          "tn": 77,
+          "fp": 6,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.07228915662650602,
+          "precision": 0.5,
+          "f2": 0.375
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.35,
+        "youden_j": 0.2806520198440822,
+        "metrics": {
+          "tp": 6,
+          "tn": 77,
+          "fp": 6,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.07228915662650602,
+          "precision": 0.5,
+          "f2": 0.375
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.4,
+        "youden_j": 0.2806520198440822,
+        "metrics": {
+          "tp": 6,
+          "tn": 77,
+          "fp": 6,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.07228915662650602,
+          "precision": 0.5,
+          "f2": 0.375
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.45,
+        "youden_j": 0.2806520198440822,
+        "metrics": {
+          "tp": 6,
+          "tn": 77,
+          "fp": 6,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.07228915662650602,
+          "precision": 0.5,
+          "f2": 0.375
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.5,
+        "youden_j": 0.29270021261516654,
+        "metrics": {
+          "tp": 6,
+          "tn": 78,
+          "fp": 5,
+          "fn": 11,
+          "safety_recall": 0.35294117647058826,
+          "false_trip_rate": 0.060240963855421686,
+          "precision": 0.5454545454545454,
+          "f2": 0.37974683544303794
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.55,
+        "youden_j": 0.06945428773919206,
+        "metrics": {
+          "tp": 2,
+          "tn": 79,
+          "fp": 4,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.04819277108433735,
+          "precision": 0.3333333333333333,
+          "f2": 0.13513513513513511
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.6,
+        "youden_j": 0.08150248051027639,
+        "metrics": {
+          "tp": 2,
+          "tn": 80,
+          "fp": 3,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.03614457831325301,
+          "precision": 0.4,
+          "f2": 0.136986301369863
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.65,
+        "youden_j": 0.09355067328136074,
+        "metrics": {
+          "tp": 2,
+          "tn": 81,
+          "fp": 2,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.024096385542168676,
+          "precision": 0.5,
+          "f2": 0.1388888888888889
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.7,
+        "youden_j": 0.11764705882352941,
+        "metrics": {
+          "tp": 2,
+          "tn": 83,
+          "fp": 0,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.0,
+          "precision": 1.0,
+          "f2": 0.14285714285714288
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.75,
+        "youden_j": 0.11764705882352941,
+        "metrics": {
+          "tp": 2,
+          "tn": 83,
+          "fp": 0,
+          "fn": 15,
+          "safety_recall": 0.11764705882352941,
+          "false_trip_rate": 0.0,
+          "precision": 1.0,
+          "f2": 0.14285714285714288
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.8,
+        "youden_j": 0.058823529411764705,
+        "metrics": {
+          "tp": 1,
+          "tn": 83,
+          "fp": 0,
+          "fn": 16,
+          "safety_recall": 0.058823529411764705,
+          "false_trip_rate": 0.0,
+          "precision": 1.0,
+          "f2": 0.07246376811594203
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.85,
+        "youden_j": 0.0,
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      },
+      {
+        "tau_fam": 0.5,
+        "theta_trip": 0.9,
+        "youden_j": 0.0,
+        "metrics": {
+          "tp": 0,
+          "tn": 83,
+          "fp": 0,
+          "fn": 17,
+          "safety_recall": 0.0,
+          "false_trip_rate": 0.0,
+          "precision": 0.0,
+          "f2": 0.0
+        }
+      }
+    ]
+  },
+  "test_6_latency": {
+    "sample_count": 100,
+    "base_mean_ms": 0.0,
+    "transform_mean_ms": 70.10391799971461,
+    "batch_inference_mean_ms": 11782.887941999435,
+    "logic_mean_ms": 0.0,
+    "total_mean_ms": 11852.99185999915,
+    "total_p50_ms": 11307.863675002009,
+    "total_p95_ms": 12419.028899997473,
+    "gradcam_cases_benchmarked": 3,
+    "gpu": false
+  },
+  "test_7_gradcam_audit": {
+    "open_case_count": 8,
+    "generated_cases": [
+      {
+        "sample_id": "test_Cassava__Bacterial_Blight_(CBB)_2436214521",
+        "test_id": "GEOM_ROT_MILD",
+        "output": "outputs\\experimental_gradcam\\test_Cassava__Bacterial_Blight_(CBB)_2436214521_GEOM_ROT_MILD.png",
+        "baseline_label": "Cassava__Brown_Streak_Disease_(CBSD)",
+        "flipped_label": "Cassava__Healthy"
+      },
+      {
+        "sample_id": "test_Cassava__Mosaic_Disease_(CMD)_112646666",
+        "test_id": "GEOM_ROT_MOD",
+        "output": "outputs\\experimental_gradcam\\test_Cassava__Mosaic_Disease_(CMD)_112646666_GEOM_ROT_MOD.png",
+        "baseline_label": "Cassava__Mosaic_Disease_(CMD)",
+        "flipped_label": "corn(maize)__common_rust"
+      },
+      {
+        "sample_id": "test_tomato__bacterial_spot_00b7e89a-e129-4576-b51f-48923888bff9___GCREC_Bact.Sp 6202",
+        "test_id": "GEOM_ROT_MILD",
+        "output": "outputs\\experimental_gradcam\\test_tomato__bacterial_spot_00b7e89a-e129-4576-b51f-48923888bff9___GCREC_Bact.Sp 6202_GEOM_ROT_MILD.png",
+        "baseline_label": "tomato__septoria_leaf_spot",
+        "flipped_label": "tomato__bacterial_spot"
+      }
+    ],
+    "output_directory": "outputs\\experimental_gradcam"
+  }
+}
